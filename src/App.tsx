@@ -240,7 +240,7 @@ export default function App() {
       <div className="absolute inset-0 radial-glow pointer-events-none z-0" />
       
       {/* Primary Header */}
-      <header className="absolute top-0 left-0 w-full border-b border-white/5 bg-transparent h-14 min-h-[56px] z-30 transition-all duration-300">
+      <header className="absolute top-0 left-0 w-full border-b border-white/10 bg-black/60 backdrop-blur-xl h-14 min-h-[56px] z-30 transition-all duration-300">
         <nav className="mx-auto flex h-full max-w-[2560px] items-center justify-between px-4 sm:px-6 md:px-8 xl:px-12 2xl:px-[240px]">
           {/* Left branding - official logo made white via CSS filter */}
           <div className="flex items-center">

@@ -50,17 +50,37 @@ export default function App() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Outside click handler to close dropdown when clicking off the header
+  // Outside click handler to close dropdown when clicking off the header/menu
   React.useEffect(() => {
     const handleOutsideClick = (e: MouseEvent) => {
-      const header = document.querySelector('header');
-      if (header && !header.contains(e.target as Node) && !(e.target as HTMLElement).closest('canvas')) {
-        setActiveDropdown(null);
+      const target = e.target as HTMLElement;
+      
+      // If no dropdown is open, nothing to do
+      if (!activeDropdown) return;
+
+      // Check if click is inside the active dropdown's panel
+      const activePanel = document.querySelector(`.dropdown-panel-${activeDropdown}`);
+      if (activePanel && activePanel.contains(target)) {
+        return;
       }
+
+      // Check if click is on the header button corresponding to the active dropdown
+      const activeHeaderButton = document.querySelector(`.header-btn-${activeDropdown}`);
+      if (activeHeaderButton && activeHeaderButton.contains(target)) {
+        return;
+      }
+
+      // If clicked the canvas, let ParticleCanvas handle it
+      if (target.closest('canvas')) {
+        return;
+      }
+
+      // For any other click (e.g. empty space in header, logo in header, outside space), close the dropdown
+      setActiveDropdown(null);
     };
     window.addEventListener('click', handleOutsideClick);
     return () => window.removeEventListener('click', handleOutsideClick);
-  }, []);
+  }, [activeDropdown]);
 
   const flashlightOverlayRef = React.useRef<HTMLDivElement | null>(null);
 
@@ -254,11 +274,10 @@ export default function App() {
       {/* Primary Header */}
       <header 
         className="absolute top-0 left-0 w-full border-b border-white/10 bg-transparent backdrop-blur-xl h-14 min-h-[56px] z-30 transition-all duration-300"
-        onMouseEnter={() => setActiveDropdown(null)}
       >
         <nav className="mx-auto flex h-full max-w-[2560px] items-center justify-between px-4 sm:px-6 md:px-8 xl:px-12 2xl:px-[240px]">
           {/* Left branding - official logo made white via CSS filter */}
-          <div className="flex items-center">
+          <div className="flex items-center" onMouseEnter={() => { if (activeDropdown) setActiveDropdown(null); }}>
             <a 
               href="https://www-dev.tars-ai.com/zh/" 
               target="_blank" 
@@ -278,12 +297,21 @@ export default function App() {
             <div className="flex max-w-full flex-nowrap items-center justify-center gap-4">
               
               {/* Menu Item 1: 超级算法 */}
-              <div className="relative group py-4">
-                <button type="button" className="inline-flex shrink-0 items-center rounded-[2px] px-3 py-1 text-[14px] font-bold leading-5 whitespace-nowrap transition-colors touch-manipulation focus-visible:outline-none text-white hover:text-[#0050b5] cursor-pointer">
+              <div 
+                className="relative group py-4"
+                onMouseEnter={() => { if (activeDropdown) setActiveDropdown('algorithm'); }}
+              >
+                <button 
+                  type="button" 
+                  className={`header-btn-algorithm inline-flex shrink-0 items-center rounded-[2px] px-3 py-1 text-[14px] font-bold leading-5 whitespace-nowrap transition-colors touch-manipulation focus-visible:outline-none cursor-pointer ${
+                    activeDropdown === 'algorithm' || activeSector === 'algorithm' ? 'text-[#0050b5]' : 'text-white hover:text-[#0050b5]'
+                  }`}
+                  onClick={() => setActiveDropdown(activeDropdown === 'algorithm' ? null : 'algorithm')}
+                >
                   <span>超级算法</span>
                 </button>
                 {/* Mega Menu Panel - Frosted Glassmorphism */}
-                <div className={`fixed inset-x-0 top-14 left-0 right-0 w-full bg-transparent backdrop-blur-xl border-b border-white/10 shadow-2xl transition-all duration-200 z-50 ${activeDropdown === 'algorithm' ? 'opacity-100 pointer-events-auto translate-y-0' : 'opacity-0 pointer-events-none -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto'}`}>
+                <div className={`dropdown-panel-algorithm fixed inset-x-0 top-14 left-0 right-0 w-full bg-transparent backdrop-blur-xl border-b border-white/10 shadow-2xl transition-all duration-200 z-50 ${activeDropdown === 'algorithm' ? 'opacity-100 pointer-events-auto translate-y-0' : 'opacity-0 pointer-events-none -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto'}`}>
                   <div className="mx-auto max-w-[2560px] px-4 pb-10 pt-6 sm:px-6 md:px-8 xl:px-12 2xl:px-[240px]">
                     <div className="flex gap-16 items-start">
                       {/* Left side category title */}
@@ -327,12 +355,21 @@ export default function App() {
               </div>
 
               {/* Menu Item 2: 超级本体 */}
-              <div className="relative group py-4">
-                <button type="button" className="inline-flex shrink-0 items-center rounded-[2px] px-3 py-1 text-[14px] font-bold leading-5 whitespace-nowrap transition-colors touch-manipulation focus-visible:outline-none text-white hover:text-[#0050b5] cursor-pointer">
+              <div 
+                className="relative group py-4"
+                onMouseEnter={() => { if (activeDropdown) setActiveDropdown('ontology'); }}
+              >
+                <button 
+                  type="button" 
+                  className={`header-btn-ontology inline-flex shrink-0 items-center rounded-[2px] px-3 py-1 text-[14px] font-bold leading-5 whitespace-nowrap transition-colors touch-manipulation focus-visible:outline-none cursor-pointer ${
+                    activeDropdown === 'ontology' || activeSector === 'ontology' ? 'text-[#0050b5]' : 'text-white hover:text-[#0050b5]'
+                  }`}
+                  onClick={() => setActiveDropdown(activeDropdown === 'ontology' ? null : 'ontology')}
+                >
                   <span>超级本体</span>
                 </button>
                 {/* Mega Menu Panel - Frosted Glassmorphism */}
-                <div className={`fixed inset-x-0 top-14 left-0 right-0 w-full bg-transparent backdrop-blur-xl border-b border-white/10 shadow-2xl transition-all duration-200 z-50 ${activeDropdown === 'ontology' ? 'opacity-100 pointer-events-auto translate-y-0' : 'opacity-0 pointer-events-none -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto'}`}>
+                <div className={`dropdown-panel-ontology fixed inset-x-0 top-14 left-0 right-0 w-full bg-transparent backdrop-blur-xl border-b border-white/10 shadow-2xl transition-all duration-200 z-50 ${activeDropdown === 'ontology' ? 'opacity-100 pointer-events-auto translate-y-0' : 'opacity-0 pointer-events-none -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto'}`}>
                   <div className="mx-auto max-w-[2560px] px-4 pb-10 pt-6 sm:px-6 md:px-8 xl:px-12 2xl:px-[240px]">
                     <div className="flex gap-16 items-start">
                       <div className="w-48 shrink-0 text-left">
@@ -383,12 +420,21 @@ export default function App() {
               </div>
 
               {/* Menu Item 3: 超级应用 */}
-              <div className="relative group py-4">
-                <button type="button" className="inline-flex shrink-0 items-center rounded-[2px] px-3 py-1 text-[14px] font-bold leading-5 whitespace-nowrap transition-colors touch-manipulation focus-visible:outline-none text-white hover:text-[#0050b5] cursor-pointer">
+              <div 
+                className="relative group py-4"
+                onMouseEnter={() => { if (activeDropdown) setActiveDropdown('application'); }}
+              >
+                <button 
+                  type="button" 
+                  className={`header-btn-application inline-flex shrink-0 items-center rounded-[2px] px-3 py-1 text-[14px] font-bold leading-5 whitespace-nowrap transition-colors touch-manipulation focus-visible:outline-none cursor-pointer ${
+                    activeDropdown === 'application' || activeSector === 'application' ? 'text-[#0050b5]' : 'text-white hover:text-[#0050b5]'
+                  }`}
+                  onClick={() => setActiveDropdown(activeDropdown === 'application' ? null : 'application')}
+                >
                   <span>超级应用</span>
                 </button>
                 {/* Mega Menu Panel - Frosted Glassmorphism */}
-                <div className={`fixed inset-x-0 top-14 left-0 right-0 w-full bg-transparent backdrop-blur-xl border-b border-white/10 shadow-2xl transition-all duration-200 z-50 ${activeDropdown === 'application' ? 'opacity-100 pointer-events-auto translate-y-0' : 'opacity-0 pointer-events-none -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto'}`}>
+                <div className={`dropdown-panel-application fixed inset-x-0 top-14 left-0 right-0 w-full bg-transparent backdrop-blur-xl border-b border-white/10 shadow-2xl transition-all duration-200 z-50 ${activeDropdown === 'application' ? 'opacity-100 pointer-events-auto translate-y-0' : 'opacity-0 pointer-events-none -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto'}`}>
                   <div className="mx-auto max-w-[2560px] px-4 pb-10 pt-6 sm:px-6 md:px-8 xl:px-12 2xl:px-[240px]">
                     <div className="flex gap-16 items-start">
                       <div className="w-48 shrink-0 text-left">
@@ -412,7 +458,10 @@ export default function App() {
               </div>
 
               {/* Menu Item 4: 关于我们 */}
-              <div className="relative group py-4">
+              <div 
+                className="relative group py-4"
+                onMouseEnter={() => { if (activeDropdown) setActiveDropdown(null); }}
+              >
                 <button type="button" className="inline-flex shrink-0 items-center rounded-[2px] px-3 py-1 text-[14px] font-bold leading-5 whitespace-nowrap transition-colors touch-manipulation focus-visible:outline-none text-white hover:text-[#0050b5] cursor-pointer">
                   <span>关于我们</span>
                 </button>
@@ -464,6 +513,7 @@ export default function App() {
                 target="_blank" 
                 rel="noopener noreferrer" 
                 className="inline-flex shrink-0 items-center rounded-[2px] px-3 py-1 text-[14px] font-bold leading-5 whitespace-nowrap transition-colors touch-manipulation focus-visible:outline-none text-white hover:text-[#0050b5] cursor-pointer"
+                onMouseEnter={() => { if (activeDropdown) setActiveDropdown(null); }}
               >
                 新闻中心
               </a>
@@ -472,7 +522,7 @@ export default function App() {
           </div>
 
           {/* Right Spacer of equal width to left logo to maintain perfect visual center */}
-          <div className="hidden min-[1200px]:block w-[120px]"></div>
+          <div className="hidden min-[1200px]:block w-[120px]" onMouseEnter={() => { if (activeDropdown) setActiveDropdown(null); }}></div>
         </nav>
       </header>
 

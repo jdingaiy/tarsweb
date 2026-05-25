@@ -40,7 +40,7 @@ interface Particle {
 interface ParticleCanvasProps {
   activeSector: SectorId | null;
   onSectorHover: (sector: SectorId | null) => void;
-  onSectorClick: (sector: SectorId) => void;
+  onSectorClick: (sector: SectorId | null) => void;
   particleDensity?: number;    // Customizable setting
   dispersionStrength?: number; // Customizable setting
   restingSpread?: number;      // Customizable setting
@@ -709,6 +709,8 @@ export default function ParticleCanvas({
   const handleCanvasClick = () => {
     if (lastHoveredSectorRef.current) {
       onSectorClick(lastHoveredSectorRef.current);
+    } else {
+      onSectorClick(null);
     }
   };
 

@@ -240,7 +240,7 @@ export default function App() {
       <div className="absolute inset-0 radial-glow pointer-events-none z-0" />
       
       {/* Primary Header */}
-      <header className="absolute top-0 left-0 w-full border-b border-white/10 bg-black/60 backdrop-blur-xl h-14 min-h-[56px] z-30 transition-all duration-300">
+      <header className="absolute top-0 left-0 w-full border-b border-white/10 bg-transparent backdrop-blur-xl h-14 min-h-[56px] z-30 transition-all duration-300">
         <nav className="mx-auto flex h-full max-w-[2560px] items-center justify-between px-4 sm:px-6 md:px-8 xl:px-12 2xl:px-[240px]">
           {/* Left branding - official logo made white via CSS filter */}
           <div className="flex items-center">
@@ -268,7 +268,7 @@ export default function App() {
                   <span>超级算法</span>
                 </button>
                 {/* Mega Menu Panel - Frosted Glassmorphism */}
-                <div className="fixed inset-x-0 top-14 left-0 right-0 w-full bg-black/60 backdrop-blur-xl border-b border-white/10 shadow-2xl transition-all duration-200 opacity-0 pointer-events-none -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto z-50">
+                <div className="fixed inset-x-0 top-14 left-0 right-0 w-full bg-transparent backdrop-blur-xl border-b border-white/10 shadow-2xl transition-all duration-200 opacity-0 pointer-events-none -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto z-50">
                   <div className="mx-auto max-w-[2560px] px-4 pb-10 pt-6 sm:px-6 md:px-8 xl:px-12 2xl:px-[240px]">
                     <div className="flex gap-16 items-start">
                       {/* Left side category title */}
@@ -317,7 +317,7 @@ export default function App() {
                   <span>超级本体</span>
                 </button>
                 {/* Mega Menu Panel - Frosted Glassmorphism */}
-                <div className="fixed inset-x-0 top-14 left-0 right-0 w-full bg-black/60 backdrop-blur-xl border-b border-white/10 shadow-2xl transition-all duration-200 opacity-0 pointer-events-none -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto z-50">
+                <div className="fixed inset-x-0 top-14 left-0 right-0 w-full bg-transparent backdrop-blur-xl border-b border-white/10 shadow-2xl transition-all duration-200 opacity-0 pointer-events-none -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto z-50">
                   <div className="mx-auto max-w-[2560px] px-4 pb-10 pt-6 sm:px-6 md:px-8 xl:px-12 2xl:px-[240px]">
                     <div className="flex gap-16 items-start">
                       <div className="w-48 shrink-0 text-left">
@@ -373,7 +373,7 @@ export default function App() {
                   <span>超级应用</span>
                 </button>
                 {/* Mega Menu Panel - Frosted Glassmorphism */}
-                <div className="fixed inset-x-0 top-14 left-0 right-0 w-full bg-black/60 backdrop-blur-xl border-b border-white/10 shadow-2xl transition-all duration-200 opacity-0 pointer-events-none -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto z-50">
+                <div className="fixed inset-x-0 top-14 left-0 right-0 w-full bg-transparent backdrop-blur-xl border-b border-white/10 shadow-2xl transition-all duration-200 opacity-0 pointer-events-none -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto z-50">
                   <div className="mx-auto max-w-[2560px] px-4 pb-10 pt-6 sm:px-6 md:px-8 xl:px-12 2xl:px-[240px]">
                     <div className="flex gap-16 items-start">
                       <div className="w-48 shrink-0 text-left">
@@ -402,7 +402,7 @@ export default function App() {
                   <span>关于我们</span>
                 </button>
                 {/* Mega Menu Panel - Frosted Glassmorphism */}
-                <div className="fixed inset-x-0 top-14 left-0 right-0 w-full bg-black/60 backdrop-blur-xl border-b border-white/10 shadow-2xl transition-all duration-200 opacity-0 pointer-events-none -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto z-50">
+                <div className="fixed inset-x-0 top-14 left-0 right-0 w-full bg-transparent backdrop-blur-xl border-b border-white/10 shadow-2xl transition-all duration-200 opacity-0 pointer-events-none -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto z-50">
                   <div className="mx-auto max-w-[2560px] px-4 pb-10 pt-6 sm:px-6 md:px-8 xl:px-12 2xl:px-[240px]">
                     <div className="flex gap-16 items-start">
                       <div className="w-48 shrink-0 text-left">

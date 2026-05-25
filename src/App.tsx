@@ -27,7 +27,7 @@ import { SectorId } from './types';
 
 export default function App() {
   const [activeSector, setActiveSector] = useState<SectorId | null>(null);
-  const [selectedDetailedSector, setSelectedDetailedSector] = useState<SectorId | null>(null);
+  const [activeDropdown, setActiveDropdown] = useState<'algorithm' | 'ontology' | 'application' | null>(null);
   const [particleDensity, setParticleDensity] = useState<number>(1.2);
   const [dispersionStrength, setDispersionStrength] = useState<number>(1.1);
   const [restingSpread, setRestingSpread] = useState<number>(10.0); // Defaults to 10px organic outline dispersion
@@ -48,6 +48,18 @@ export default function App() {
     };
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Outside click handler to close dropdown when clicking off the header
+  React.useEffect(() => {
+    const handleOutsideClick = (e: MouseEvent) => {
+      const header = document.querySelector('header');
+      if (header && !header.contains(e.target as Node) && !(e.target as HTMLElement).closest('canvas')) {
+        setActiveDropdown(null);
+      }
+    };
+    window.addEventListener('click', handleOutsideClick);
+    return () => window.removeEventListener('click', handleOutsideClick);
   }, []);
 
   const flashlightOverlayRef = React.useRef<HTMLDivElement | null>(null);
@@ -224,7 +236,7 @@ export default function App() {
     };
   };
 
-  const currentSectorData = selectedDetailedSector ? SECTORS_DATA[selectedDetailedSector] : null;
+
 
   // Symmetrical full-screen grid math to align precisely with center-anchored design
   const scaleFactor = dimensions.width < 1120 ? Math.max(0.5, dimensions.width / 1120) : 1.0;
@@ -240,7 +252,10 @@ export default function App() {
       <div className="absolute inset-0 radial-glow pointer-events-none z-0" />
       
       {/* Primary Header */}
-      <header className="absolute top-0 left-0 w-full border-b border-white/10 bg-transparent backdrop-blur-xl h-14 min-h-[56px] z-30 transition-all duration-300">
+      <header 
+        className="absolute top-0 left-0 w-full border-b border-white/10 bg-transparent backdrop-blur-xl h-14 min-h-[56px] z-30 transition-all duration-300"
+        onMouseEnter={() => setActiveDropdown(null)}
+      >
         <nav className="mx-auto flex h-full max-w-[2560px] items-center justify-between px-4 sm:px-6 md:px-8 xl:px-12 2xl:px-[240px]">
           {/* Left branding - official logo made white via CSS filter */}
           <div className="flex items-center">
@@ -268,7 +283,7 @@ export default function App() {
                   <span>超级算法</span>
                 </button>
                 {/* Mega Menu Panel - Frosted Glassmorphism */}
-                <div className="fixed inset-x-0 top-14 left-0 right-0 w-full bg-transparent backdrop-blur-xl border-b border-white/10 shadow-2xl transition-all duration-200 opacity-0 pointer-events-none -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto z-50">
+                <div className={`fixed inset-x-0 top-14 left-0 right-0 w-full bg-transparent backdrop-blur-xl border-b border-white/10 shadow-2xl transition-all duration-200 z-50 ${activeDropdown === 'algorithm' ? 'opacity-100 pointer-events-auto translate-y-0' : 'opacity-0 pointer-events-none -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto'}`}>
                   <div className="mx-auto max-w-[2560px] px-4 pb-10 pt-6 sm:px-6 md:px-8 xl:px-12 2xl:px-[240px]">
                     <div className="flex gap-16 items-start">
                       {/* Left side category title */}
@@ -317,7 +332,7 @@ export default function App() {
                   <span>超级本体</span>
                 </button>
                 {/* Mega Menu Panel - Frosted Glassmorphism */}
-                <div className="fixed inset-x-0 top-14 left-0 right-0 w-full bg-transparent backdrop-blur-xl border-b border-white/10 shadow-2xl transition-all duration-200 opacity-0 pointer-events-none -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto z-50">
+                <div className={`fixed inset-x-0 top-14 left-0 right-0 w-full bg-transparent backdrop-blur-xl border-b border-white/10 shadow-2xl transition-all duration-200 z-50 ${activeDropdown === 'ontology' ? 'opacity-100 pointer-events-auto translate-y-0' : 'opacity-0 pointer-events-none -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto'}`}>
                   <div className="mx-auto max-w-[2560px] px-4 pb-10 pt-6 sm:px-6 md:px-8 xl:px-12 2xl:px-[240px]">
                     <div className="flex gap-16 items-start">
                       <div className="w-48 shrink-0 text-left">
@@ -373,7 +388,7 @@ export default function App() {
                   <span>超级应用</span>
                 </button>
                 {/* Mega Menu Panel - Frosted Glassmorphism */}
-                <div className="fixed inset-x-0 top-14 left-0 right-0 w-full bg-transparent backdrop-blur-xl border-b border-white/10 shadow-2xl transition-all duration-200 opacity-0 pointer-events-none -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto z-50">
+                <div className={`fixed inset-x-0 top-14 left-0 right-0 w-full bg-transparent backdrop-blur-xl border-b border-white/10 shadow-2xl transition-all duration-200 z-50 ${activeDropdown === 'application' ? 'opacity-100 pointer-events-auto translate-y-0' : 'opacity-0 pointer-events-none -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto'}`}>
                   <div className="mx-auto max-w-[2560px] px-4 pb-10 pt-6 sm:px-6 md:px-8 xl:px-12 2xl:px-[240px]">
                     <div className="flex gap-16 items-start">
                       <div className="w-48 shrink-0 text-left">
@@ -568,7 +583,7 @@ export default function App() {
             <ParticleCanvas 
               activeSector={activeSector}
               onSectorHover={(sector) => setActiveSector(sector)}
-              onSectorClick={(sector) => setSelectedDetailedSector(sector)}
+              onSectorClick={(sector) => setActiveDropdown(activeDropdown === sector ? null : sector)}
               particleDensity={particleDensity}
               dispersionStrength={dispersionStrength}
               restingSpread={restingSpread}
@@ -702,146 +717,7 @@ export default function App() {
         </div>
       )}
 
-      {/* FULL-SCREEN DETAIL TERMINAL MODE (Activated when a grid sector is clicked/selected for landing details) */}
-      {selectedDetailedSector && currentSectorData && (
-        <div className="fixed inset-0 bg-black/95 z-55 flex flex-col p-6 overflow-y-auto animate-fade-in transition-all duration-300">
-          
-          {/* Detail Sub Header */}
-          <div className="max-w-6xl w-full mx-auto flex items-center justify-between border-b border-white/10 pb-4 mb-6">
-            <button 
-              onClick={() => setSelectedDetailedSector(null)}
-              className="flex items-center gap-2 text-xs font-medium bg-white/5 hover:bg-white/15 border border-white/10 rounded-lg px-4 py-2 hover:text-white transition-all duration-200 cursor-pointer"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              <span>返回粒子控制网格</span>
-            </button>
-            
-            <div className="flex items-center gap-2 font-mono text-xs text-gray-500">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping"></span>
-              <span>SECURE CONTEXT / COGNITIVE TUNNEL</span>
-            </div>
-          </div>
 
-          {/* Core Spec Sheet & Dynamic Visual Dashboard */}
-          <div className="max-w-6xl w-full mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-start my-auto">
-            
-            {/* Visual Media Panel */}
-            <div className="lg:col-span-5 space-y-4">
-              <div className="relative rounded-2xl border border-white/10 overflow-hidden shadow-2xl h-[300px] md:h-[400px]">
-                <img 
-                  src={currentSectorData.imageUrl} 
-                  alt={currentSectorData.name} 
-                  referrerPolicy="no-referrer"
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent" />
-                <div className="absolute top-4 left-4 bg-black/60 px-3 py-1 rounded-full border border-white/15 backdrop-blur-md flex items-center gap-1 text-[10px] text-white">
-                  <Activity className="w-3 h-3 text-emerald-400" />
-                  <span>实时具身追踪已就绪</span>
-                </div>
-                
-                {/* Visual Label overlay */}
-                <div className="absolute bottom-4 left-6 right-6">
-                  <h3 className="text-sm font-mono text-white/50">{currentSectorData.id.toUpperCase()}_UNIT_ALPHA</h3>
-                  <h2 className="text-xl font-bold text-white tracking-widest">{currentSectorData.name}</h2>
-                </div>
-              </div>
-
-              {/* Embedded Interactive Code sandbox layout widget to represent simulated terminal log */}
-              <div className="bg-[#0b0b0b] border border-white/5 rounded-xl p-4 font-mono text-xs text-gray-400">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-[10px] text-emerald-400 flex items-center gap-1.5"><Terminal className="w-3.5 h-3.5" /> SYSTEM STACK LOGGER</span>
-                  <span className="text-[9px] text-[#444]">SPEED: 1.2 GB/S</span>
-                </div>
-                <div className="space-y-1 text-[11px] leading-relaxed">
-                  <p className="text-gray-500">{"[08:16:33] INITIALIZING CLUSTERING AGENT..."}</p>
-                  <p className="text-emerald-500">{"[08:16:34] KNOWLEDGE NEURON COMPILING SUCCESSFULLY"}</p>
-                  <p className="text-gray-500">{"[08:16:36] PIPELINE ROUTING: [AETHER] -> [LOCAL_NODE_0]"}</p>
-                  <p className="text-blue-400">{"[08:16:37] CORE_CALIBRATOR PARAMETERS: OPTIMIZED"}</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Spec details descriptions */}
-            <div className="lg:col-span-7 space-y-6">
-              
-              <div>
-                <span className="text-xs font-mono tracking-widest text-emerald-400 uppercase font-semibold">{currentSectorData.subtitle}</span>
-                <h1 className="text-3xl font-extrabold text-white tracking-tight mt-1">{currentSectorData.title}</h1>
-                <p className="text-sm text-gray-400 mt-3 leading-relaxed">{currentSectorData.description}</p>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                
-                {/* Specifics list */}
-                <div className="bg-white/5 border border-white/5 rounded-xl p-5 space-y-3">
-                  <h3 className="text-xs font-bold text-white tracking-wider font-mono">研发技术指标 Specs</h3>
-                  <ul className="space-y-2 text-xs text-gray-400">
-                    {currentSectorData.details.specs.map((spec, i) => (
-                      <li key={i} className="flex items-start gap-2">
-                        <span className="w-1.5 h-1.5 rounded-full bg-white mt-1.5 shrink-0" />
-                        <span>{spec}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                {/* Key capabilities */}
-                <div className="bg-white/5 border border-white/5 rounded-xl p-5 space-y-3">
-                  <h3 className="text-xs font-bold text-white tracking-wider font-mono">核心赋能 Capabilities</h3>
-                  <ul className="space-y-2 text-xs text-gray-400">
-                    {currentSectorData.details.capabilities.map((cap, i) => (
-                      <li key={i} className="flex items-start gap-2 text-glow">
-                        <span className="w-1.5 h-1.5 rounded-full bg-white/70 mt-1.5 shrink-0" />
-                        <span>{cap}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-              </div>
-
-              {/* Benchmarks (Bar Chart rendering using Tailwind CSS grids!) */}
-              <div className="bg-white/5 border border-white/5 rounded-xl p-5 space-y-4">
-                <h3 className="text-xs font-bold text-white tracking-wider font-mono">性能跑分测试 Benchmarks</h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  {currentSectorData.details.benchmarks.map((bench, i) => (
-                    <div key={i} className="bg-[#0c0c0c] border border-white/5 rounded-lg p-3.5 flex flex-col justify-between">
-                      <span className="text-[10px] text-gray-500 font-mono uppercase">{bench.label}</span>
-                      <span className="text-2xl font-black text-white text-glow tracking-tight mt-1">{bench.value}</span>
-                      <div className="w-full bg-white/10 h-1 rounded overflow-hidden mt-2">
-                        <div 
-                          className="bg-white h-full" 
-                          style={{ width: bench.value.includes('%') ? bench.value : '75%' }} 
-                        />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Industry Use cases */}
-              <div className="space-y-2 pt-2">
-                <h3 className="text-xs font-bold text-white tracking-wider font-mono">落地解决方案 Industry Use-cases</h3>
-                <div className="space-y-2">
-                  {currentSectorData.details.useCases.map((useCase, i) => (
-                    <div key={i} className="bg-[#0b0b0b] hover:bg-white/5 border border-white/5 hover:border-white/10 rounded-xl p-3 flex items-center justify-between transition-all duration-200">
-                      <div className="flex items-center gap-3">
-                        <span className="w-5 h-5 rounded bg-white/10 text-white font-mono text-[10px] font-bold flex items-center justify-center">0{i+1}</span>
-                        <span className="text-xs text-gray-300">{useCase}</span>
-                      </div>
-                      <ChevronRight className="w-3.5 h-3.5 text-gray-500" />
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-            </div>
-
-          </div>
-
-        </div>
-      )}
 
       {/* Decorative Outer footer credits strictly minimal */}
       <footer className="relative w-full py-4 text-center text-[10px] text-gray-600 font-mono border-t border-white/5 z-20">

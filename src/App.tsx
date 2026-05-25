@@ -273,8 +273,10 @@ export default function App() {
       
       {/* Primary Header */}
       <header 
-        className="absolute top-0 left-0 w-full border-b border-white/10 bg-transparent backdrop-blur-xl h-14 min-h-[56px] z-30 transition-all duration-300"
+        className="absolute top-0 left-0 w-full h-14 min-h-[56px] z-30 transition-all duration-300"
       >
+        {/* Header background blur layer (only blurs the 56px area) to avoid nested backdrop-filter browser rendering bug */}
+        <div className="absolute inset-0 bg-transparent backdrop-blur-xl border-b border-white/10 pointer-events-none -z-10" />
         <nav className="mx-auto flex h-full max-w-[2560px] items-center justify-between px-4 sm:px-6 md:px-8 xl:px-12 2xl:px-[240px]">
           {/* Left branding - official logo made white via CSS filter */}
           <div className="flex items-center" onMouseEnter={() => { if (activeDropdown) setActiveDropdown(null); }}>
@@ -313,42 +315,35 @@ export default function App() {
                 {/* Mega Menu Panel - Frosted Glassmorphism */}
                 <div className={`dropdown-panel-algorithm fixed inset-x-0 top-14 left-0 right-0 w-full bg-transparent backdrop-blur-xl border-b border-white/10 shadow-2xl transition-all duration-200 z-50 ${activeDropdown === 'algorithm' ? 'opacity-100 pointer-events-auto translate-y-0' : 'opacity-0 pointer-events-none -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto'}`}>
                   <div className="mx-auto max-w-[2560px] px-4 pb-10 pt-6 sm:px-6 md:px-8 xl:px-12 2xl:px-[240px]">
-                    <div className="flex gap-16 items-start">
-                      {/* Left side category title */}
-                      <div className="w-48 shrink-0 text-left">
-                        <h3 className="text-[18px] font-bold text-white tracking-wider">超级算法</h3>
-                        <p className="text-xs text-gray-400 mt-2 font-mono">SUPER ALGORITHM</p>
-                      </div>
-                      {/* Right side grid of links */}
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 flex-1 text-left">
-                        <a 
-                          href="https://www-dev.tars-ai.com/zh/technology/awe/" 
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                          className="group/item block p-4 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/5 transition-all duration-200"
-                        >
-                          <div className="font-bold text-[14px] text-white group-hover/item:text-[#0050b5] transition-colors">AWE 3.5 AI世界引擎</div>
-                          <div className="text-[12px] text-gray-400 mt-1">自研多模态人工智能模型，为具身智能机器人赋予强大脑力。</div>
-                        </a>
-                        <a 
-                          href="https://www-dev.tars-ai.com/zh/products/wiyh/" 
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                          className="group/item block p-4 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/5 transition-all duration-200"
-                        >
-                          <div className="font-bold text-[14px] text-white group-hover/item:text-[#0050b5] transition-colors">WIYH 数据集</div>
-                          <div className="text-[12px] text-gray-400 mt-1">包含大量关节轨迹与触觉数据的离线数据集，打通训练闭环。</div>
-                        </a>
-                        <a 
-                          href="https://www-dev.tars-ai.com/zh/products/sense-hub/" 
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                          className="group/item block p-4 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/5 transition-all duration-200"
-                        >
-                          <div className="font-bold text-[14px] text-white group-hover/item:text-[#0050b5] transition-colors">SenseHub</div>
-                          <div className="text-[12px] text-gray-400 mt-1">高精度视触觉多模态传感器系统，赋予细腻物理接触理解。</div>
-                        </a>
-                      </div>
+                    {/* Grid of links */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full text-left">
+                      <a 
+                        href="https://www-dev.tars-ai.com/zh/technology/awe/" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="group/item block p-4 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/5 transition-all duration-200"
+                      >
+                        <div className="font-bold text-[14px] text-white group-hover/item:text-[#0050b5] transition-colors">AWE 3.5 AI世界引擎</div>
+                        <div className="text-[12px] text-gray-400 mt-1">自研多模态人工智能模型，为具身智能机器人赋予强大脑力。</div>
+                      </a>
+                      <a 
+                        href="https://www-dev.tars-ai.com/zh/products/wiyh/" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="group/item block p-4 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/5 transition-all duration-200"
+                      >
+                        <div className="font-bold text-[14px] text-white group-hover/item:text-[#0050b5] transition-colors">WIYH 数据集</div>
+                        <div className="text-[12px] text-gray-400 mt-1">包含大量关节轨迹与触觉数据的离线数据集，打通训练闭环。</div>
+                      </a>
+                      <a 
+                        href="https://www-dev.tars-ai.com/zh/products/sense-hub/" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="group/item block p-4 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/5 transition-all duration-200"
+                      >
+                        <div className="font-bold text-[14px] text-white group-hover/item:text-[#0050b5] transition-colors">SenseHub</div>
+                        <div className="text-[12px] text-gray-400 mt-1">高精度视触觉多模态传感器系统，赋予细腻物理接触理解。</div>
+                      </a>
                     </div>
                   </div>
                 </div>
@@ -371,49 +366,43 @@ export default function App() {
                 {/* Mega Menu Panel - Frosted Glassmorphism */}
                 <div className={`dropdown-panel-ontology fixed inset-x-0 top-14 left-0 right-0 w-full bg-transparent backdrop-blur-xl border-b border-white/10 shadow-2xl transition-all duration-200 z-50 ${activeDropdown === 'ontology' ? 'opacity-100 pointer-events-auto translate-y-0' : 'opacity-0 pointer-events-none -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto'}`}>
                   <div className="mx-auto max-w-[2560px] px-4 pb-10 pt-6 sm:px-6 md:px-8 xl:px-12 2xl:px-[240px]">
-                    <div className="flex gap-16 items-start">
-                      <div className="w-48 shrink-0 text-left">
-                        <h3 className="text-[18px] font-bold text-white tracking-wider">超级本体</h3>
-                        <p className="text-xs text-gray-400 mt-2 font-mono">SUPER ONTOLOGY</p>
-                      </div>
-                      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 flex-1 text-left">
-                        <a 
-                          href="https://www-dev.tars-ai.com/zh/products/a-series/" 
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                          className="group/item block p-4 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/5 transition-all duration-200"
-                        >
-                          <div className="font-bold text-[14px] text-white group-hover/item:text-[#0050b5] transition-colors">A系列机器人</div>
-                          <div className="text-[12px] text-gray-400 mt-1">全尺寸双足人形机器人，高自由度与卓越运动平衡。</div>
-                        </a>
-                        <a 
-                          href="https://www-dev.tars-ai.com/zh/products/t-series/" 
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                          className="group/item block p-4 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/5 transition-all duration-200"
-                        >
-                          <div className="font-bold text-[14px] text-white group-hover/item:text-[#0050b5] transition-colors">T系列机器人</div>
-                          <div className="text-[12px] text-gray-400 mt-1">轮足式具身智能机器人，多地形快速移动与高效执行。</div>
-                        </a>
-                        <a 
-                          href="https://www-dev.tars-ai.com/zh/products/tars-dex/" 
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                          className="group/item block p-4 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/5 transition-all duration-200"
-                        >
-                          <div className="font-bold text-[14px] text-white group-hover/item:text-[#0050b5] transition-colors">Tars DexHand</div>
-                          <div className="text-[12px] text-gray-400 mt-1">仿生高自由度灵巧手，支持高精度触觉与精细手内操作。</div>
-                        </a>
-                        <a 
-                          href="https://www-dev.tars-ai.com/zh/products/joints/" 
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                          className="group/item block p-4 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/5 transition-all duration-200"
-                        >
-                          <div className="font-bold text-[14px] text-white group-hover/item:text-[#0050b5] transition-colors">Tars Drive 灵巧关节</div>
-                          <div className="text-[12px] text-gray-400 mt-1">机器人专用高性能动力关节，大扭矩与高响应速度。</div>
-                        </a>
-                      </div>
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-6 w-full text-left">
+                      <a 
+                        href="https://www-dev.tars-ai.com/zh/products/a-series/" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="group/item block p-4 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/5 transition-all duration-200"
+                      >
+                        <div className="font-bold text-[14px] text-white group-hover/item:text-[#0050b5] transition-colors">A系列机器人</div>
+                        <div className="text-[12px] text-gray-400 mt-1">全尺寸双足人形机器人，高自由度与卓越运动平衡。</div>
+                      </a>
+                      <a 
+                        href="https://www-dev.tars-ai.com/zh/products/t-series/" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="group/item block p-4 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/5 transition-all duration-200"
+                      >
+                        <div className="font-bold text-[14px] text-white group-hover/item:text-[#0050b5] transition-colors">T系列机器人</div>
+                        <div className="text-[12px] text-gray-400 mt-1">轮足式具身智能机器人，多地形快速移动与高效执行。</div>
+                      </a>
+                      <a 
+                        href="https://www-dev.tars-ai.com/zh/products/tars-dex/" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="group/item block p-4 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/5 transition-all duration-200"
+                      >
+                        <div className="font-bold text-[14px] text-white group-hover/item:text-[#0050b5] transition-colors">Tars DexHand</div>
+                        <div className="text-[12px] text-gray-400 mt-1">仿生高自由度灵巧手，支持高精度触觉与精细手内操作。</div>
+                      </a>
+                      <a 
+                        href="https://www-dev.tars-ai.com/zh/products/joints/" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="group/item block p-4 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/5 transition-all duration-200"
+                      >
+                        <div className="font-bold text-[14px] text-white group-hover/item:text-[#0050b5] transition-colors">Tars Drive 灵巧关节</div>
+                        <div className="text-[12px] text-gray-400 mt-1">机器人专用高性能动力关节，大扭矩与高响应速度。</div>
+                      </a>
                     </div>
                   </div>
                 </div>
@@ -436,22 +425,16 @@ export default function App() {
                 {/* Mega Menu Panel - Frosted Glassmorphism */}
                 <div className={`dropdown-panel-application fixed inset-x-0 top-14 left-0 right-0 w-full bg-transparent backdrop-blur-xl border-b border-white/10 shadow-2xl transition-all duration-200 z-50 ${activeDropdown === 'application' ? 'opacity-100 pointer-events-auto translate-y-0' : 'opacity-0 pointer-events-none -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto'}`}>
                   <div className="mx-auto max-w-[2560px] px-4 pb-10 pt-6 sm:px-6 md:px-8 xl:px-12 2xl:px-[240px]">
-                    <div className="flex gap-16 items-start">
-                      <div className="w-48 shrink-0 text-left">
-                        <h3 className="text-[18px] font-bold text-white tracking-wider">超级应用</h3>
-                        <p className="text-xs text-gray-400 mt-2 font-mono">SUPER APPLICATION</p>
-                      </div>
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 flex-1 text-left">
-                        <a 
-                          href="https://www-dev.tars-ai.com/zh/products/awr/" 
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                          className="group/item block p-4 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/5 transition-all duration-200"
-                        >
-                          <div className="font-bold text-[14px] text-white group-hover/item:text-[#0050b5] transition-colors">AWR</div>
-                          <div className="text-[12px] text-gray-400 mt-1">具身智能机器人应用系统，支持多行业定制化场景部署。</div>
-                        </a>
-                      </div>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full text-left">
+                      <a 
+                        href="https://www-dev.tars-ai.com/zh/products/awr/" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="group/item block p-4 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/5 transition-all duration-200"
+                      >
+                        <div className="font-bold text-[14px] text-white group-hover/item:text-[#0050b5] transition-colors">AWR</div>
+                        <div className="text-[12px] text-gray-400 mt-1">具身智能机器人应用系统，支持多行业定制化场景部署。</div>
+                      </a>
                     </div>
                   </div>
                 </div>
@@ -468,40 +451,34 @@ export default function App() {
                 {/* Mega Menu Panel - Frosted Glassmorphism */}
                 <div className="fixed inset-x-0 top-14 left-0 right-0 w-full bg-transparent backdrop-blur-xl border-b border-white/10 shadow-2xl transition-all duration-200 opacity-0 pointer-events-none -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto z-50">
                   <div className="mx-auto max-w-[2560px] px-4 pb-10 pt-6 sm:px-6 md:px-8 xl:px-12 2xl:px-[240px]">
-                    <div className="flex gap-16 items-start">
-                      <div className="w-48 shrink-0 text-left">
-                        <h3 className="text-[18px] font-bold text-white tracking-wider">关于我们</h3>
-                        <p className="text-xs text-gray-400 mt-2 font-mono">ABOUT US</p>
-                      </div>
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 flex-1 text-left">
-                        <a 
-                          href="https://www-dev.tars-ai.com/zh/about/" 
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                          className="group/item block p-4 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/5 transition-all duration-200"
-                        >
-                          <div className="font-bold text-[14px] text-white group-hover/item:text-[#0050b5] transition-colors">公司介绍</div>
-                          <div className="text-[12px] text-gray-400 mt-1">了解 TARS 的核心使命、发展历程与团队风采。</div>
-                        </a>
-                        <a 
-                          href="https://www-dev.tars-ai.com/zh/contact/" 
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                          className="group/item block p-4 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/5 transition-all duration-200"
-                        >
-                          <div className="font-bold text-[14px] text-white group-hover/item:text-[#0050b5] transition-colors">联系我们</div>
-                          <div className="text-[12px] text-gray-400 mt-1">商业洽谈与技术合作通道，期待您的联络。</div>
-                        </a>
-                        <a 
-                          href="https://tarsrobot.jobs.feishu.cn/index" 
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                          className="group/item block p-4 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/5 transition-all duration-200"
-                        >
-                          <div className="font-bold text-[14px] text-white group-hover/item:text-[#0050b5] transition-colors">加入我们</div>
-                          <div className="text-[12px] text-gray-400 mt-1">诚邀科技与创新英才，共绘具身智能的美好蓝图。</div>
-                        </a>
-                      </div>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full text-left">
+                      <a 
+                        href="https://www-dev.tars-ai.com/zh/about/" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="group/item block p-4 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/5 transition-all duration-200"
+                      >
+                        <div className="font-bold text-[14px] text-white group-hover/item:text-[#0050b5] transition-colors">公司介绍</div>
+                        <div className="text-[12px] text-gray-400 mt-1">了解 TARS 的核心使命、发展历程与团队风采。</div>
+                      </a>
+                      <a 
+                        href="https://www-dev.tars-ai.com/zh/contact/" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="group/item block p-4 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/5 transition-all duration-200"
+                      >
+                        <div className="font-bold text-[14px] text-white group-hover/item:text-[#0050b5] transition-colors">联系我们</div>
+                        <div className="text-[12px] text-gray-400 mt-1">商业洽谈与技术合作通道，期待您的联络。</div>
+                      </a>
+                      <a 
+                        href="https://tarsrobot.jobs.feishu.cn/index" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="group/item block p-4 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/5 transition-all duration-200"
+                      >
+                        <div className="font-bold text-[14px] text-white group-hover/item:text-[#0050b5] transition-colors">加入我们</div>
+                        <div className="text-[12px] text-gray-400 mt-1">诚邀科技与创新英才，共绘具身智能的美好蓝图。</div>
+                      </a>
                     </div>
                   </div>
                 </div>

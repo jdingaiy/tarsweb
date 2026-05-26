@@ -191,8 +191,8 @@ export default function ParticleCanvas({
               if (randSpread < 0.45) {
                 // Core: tightly bound to the outline to form the sharp main shape
                 dispersionCategory = 'core';
-                individualSpread = restingSpread * 0.45; // wider bright particle belt (increased from 0.20)
-                pScatterAmp = 0.18 + Math.random() * 0.18; // slightly more movement for organic dispersion
+                individualSpread = restingSpread * 0.90; // wider bright particle belt (expanded by another 2x)
+                pScatterAmp = 0.30 + Math.random() * 0.30; // wider movement for organic dispersion
                 pBaseAlpha = 0.42 + Math.random() * 0.28; // bright core (increased)
                 
                 const randVal = Math.random();

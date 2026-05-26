@@ -19,6 +19,8 @@ interface Particle {
   z: number;       // Physical depth (Z-distance from glass)
   ox: number;      // Outline native coordinate X (0 - 670)
   oy: number;      // Outline native coordinate Y (0 - 580)
+  ox_base?: number; // Original native coordinate X
+  oy_base?: number; // Original native coordinate Y
   fx: number;      // Fill native coordinate X (0 - 670)
   fy: number;      // Fill native coordinate Y (0 - 580)
   currentRatio: number; // Transition interpolation between outline (0.0) and fill (1.0)
@@ -191,9 +193,9 @@ export default function ParticleCanvas({
               if (randSpread < 0.50) {
                 // Core: tightly bound to the outline to form the sharp main shape
                 dispersionCategory = 'core';
-                individualSpread = restingSpread * 0.12; // tight center line (reduced from 1.80)
-                pScatterAmp = 0.08 + Math.random() * 0.08; // very little movement to keep the core sharp
-                pBaseAlpha = 0.65 + Math.random() * 0.25; // extremely bright core (increased)
+                individualSpread = restingSpread * 1.10; // wider core belt for fluffy stardust outline
+                pScatterAmp = 0.28 + Math.random() * 0.28; // organic drift
+                pBaseAlpha = 0.45 + Math.random() * 0.25; // bright core (increased)
                 
                 const randVal = Math.random();
                 pSize = 0.16 + randVal * 0.16; // smaller core particles (0.16 to 0.32)
@@ -231,6 +233,8 @@ export default function ParticleCanvas({
                 z: (Math.random() - 0.5) * 12, // subtle organic initial depth variations
                 ox: x + jitterX,
                 oy: y + jitterY,
+                ox_base: x,
+                oy_base: y,
                 fx: fx + (Math.random() - 0.5) * 2.0,
                 fy: fy + (Math.random() - 0.5) * 2.0,
                 currentRatio: 0.0, // default starts at outline (0)
@@ -291,6 +295,8 @@ export default function ParticleCanvas({
           // Match both outline and fill targets so they remain continuous and static inside the shape
           ox: pt.x + jitterX,
           oy: pt.y + jitterY,
+          ox_base: pt.x,
+          oy_base: pt.y,
           fx: pt.x + jitterX,
           fy: pt.y + jitterY,
           currentRatio: 0.0, 
@@ -562,31 +568,6 @@ export default function ParticleCanvas({
 
       } else {
         // Pass 3c: Resting state - draw all particles normally with standard optical focus variance
-        
-        // Draw a soft, hardware-accelerated ambient outline glow behind the particles
-        ctx.save();
-        ctx.setTransform(1, 0, 0, 1, 0, 0); // reset transform to identity
-        ctx.translate(logoScreenX, logoScreenY);
-        ctx.scale(scale, scale);
-        ctx.lineCap = 'round';
-        ctx.lineJoin = 'round';
-        
-        // Very wide soft glow
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.010)';
-        ctx.lineWidth = 36;
-        ctx.stroke(pathAlgorithm);
-        ctx.stroke(pathOntology);
-        ctx.stroke(pathApplication);
-
-        // Medium soft glow
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.024)';
-        ctx.lineWidth = 16;
-        ctx.stroke(pathAlgorithm);
-        ctx.stroke(pathOntology);
-        ctx.stroke(pathApplication);
-        
-        ctx.restore();
-
         particlesRef.current.forEach((p) => {
           // Performance Optimization: Only draw 15% of the fill particles in resting state
           if (p.isFillOnly && (p.noiseSeed % 100 > 15)) {
@@ -632,13 +613,20 @@ export default function ParticleCanvas({
             scanGlow = Math.pow(Math.cos((distToScan / 90) * Math.PI / 2), 4.0) * 1.8;
           }
 
-          // Calculate displacement from outline to smoothly fade brightness and size as particles drift
-          const displacement = Math.sqrt(driftX * driftX + driftY * driftY);
-          const maxDrift = p.scatterAmp * 12.5;
+          // Calculate displacement from the original unjittered outline coordinate
+          const baseScreenX = logoScreenX + (p.ox_base ?? p.ox) * scale;
+          const baseScreenY = logoScreenY + (p.oy_base ?? p.oy) * scale;
+          const totalDx = drawX - baseScreenX;
+          const totalDy = drawY - baseScreenY;
+          const displacement = Math.sqrt(totalDx * totalDx + totalDy * totalDy);
+          
+          // Define a soft decay radius based on the particle's category and scale
+          const decayRadius = (p.isFillOnly ? 15.0 : (p.dispersionCategory === 'core' ? 12.0 : (p.dispersionCategory === 'cloud' ? 24.0 : 45.0))) * scale;
+          
           let fadeFactor = 1.0;
-          if (maxDrift > 0.1) {
-            const ratio = Math.min(1.0, displacement / maxDrift);
-            // Cosine transition: starts at 1.0 (core), drops continuously and smoothly to 0.00 (outer edge)
+          if (decayRadius > 0.1) {
+            const ratio = Math.min(1.0, displacement / decayRadius);
+            // Cosine transition: starts at 1.0 (center), drops continuously and smoothly to 0.00 (outer edge of decay)
             fadeFactor = Math.cos(ratio * Math.PI / 2);
           }
 
@@ -650,8 +638,8 @@ export default function ParticleCanvas({
           // Subtle individual size breathing fluctuation (feels sparkled, not global)
           finalDrawSize *= (1.0 + Math.sin(t * 2.5 + p.noiseSeed) * 0.12);
 
-          // High contrast core (scaled up to 3.20x base) that fades non-linearly to create a sharp bright center and dim outer glow
-          let finalDrawAlpha = Math.min(1.0, p.alpha * sizeBrightnessMult * 3.20 * Math.pow(fadeFactor, 2.20)); 
+          // High contrast core (scaled up to 3.80x base) that fades non-linearly to create a sharp bright center and dim outer glow
+          let finalDrawAlpha = Math.min(1.0, p.alpha * sizeBrightnessMult * 3.80 * Math.pow(fadeFactor, 1.80)); 
 
           if (totalBlurRadius > 0.4) {
             finalDrawSize = finalDrawSize + totalBlurRadius * 0.22;

@@ -660,7 +660,7 @@ export default function App() {
                       position: 'absolute',
                       left: `${boundaryPadding}px`,
                       top: `calc(50% - ${(82 * logoBaseScale + 10) * scaleFactor}px)`,
-                      width: `calc(50vw - ${boundaryPadding}px - ${220 * currentLogoScale}px)`,
+                      width: `calc(50vw - ${boundaryPadding}px - ${380 * currentLogoScale}px)`,
                       transform: 'translateY(-50%)',
                     }}
                     className="z-30 transition-all duration-300 select-none pointer-events-none"
@@ -680,7 +680,7 @@ export default function App() {
                       position: 'absolute',
                       right: `${boundaryPadding}px`,
                       top: `calc(50% - ${(230 * logoBaseScale + 10) * scaleFactor}px)`,
-                      width: `calc(50vw - ${boundaryPadding}px - ${305 * currentLogoScale}px)`,
+                      width: `calc(50vw - ${boundaryPadding}px - ${410 * currentLogoScale}px)`,
                       transform: 'translateY(-50%)',
                     }}
                     className="z-30 transition-all duration-300 select-none pointer-events-none"
@@ -700,7 +700,7 @@ export default function App() {
                       position: 'absolute',
                       right: `${boundaryPadding}px`,
                       top: `calc(50% + ${(83.5 * logoBaseScale - 10) * scaleFactor}px)`,
-                      width: `calc(50vw - ${boundaryPadding}px - ${265 * currentLogoScale}px)`,
+                      width: `calc(50vw - ${boundaryPadding}px - ${180 * currentLogoScale}px)`,
                       transform: 'translateY(-50%)',
                     }}
                     className="z-30 transition-all duration-300 select-none pointer-events-none"

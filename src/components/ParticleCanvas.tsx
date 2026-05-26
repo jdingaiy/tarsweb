@@ -191,8 +191,8 @@ export default function ParticleCanvas({
               if (randSpread < 0.45) {
                 // Core: tightly bound to the outline to form the sharp main shape
                 dispersionCategory = 'core';
-                individualSpread = restingSpread * 0.90; // wider bright particle belt (expanded by another 2x)
-                pScatterAmp = 0.30 + Math.random() * 0.30; // wider movement for organic dispersion
+                individualSpread = restingSpread * 1.80; // wider bright particle belt (further expanded)
+                pScatterAmp = 0.50 + Math.random() * 0.50; // wider movement for organic dispersion
                 pBaseAlpha = 0.42 + Math.random() * 0.28; // bright core (increased)
                 
                 const randVal = Math.random();
@@ -203,8 +203,8 @@ export default function ParticleCanvas({
               } else if (randSpread < 0.80) {
                 // Cloud: moderately dispersed mist around the core
                 dispersionCategory = 'cloud';
-                individualSpread = restingSpread * 1.5; // wider moderate spread
-                pScatterAmp = 0.7 + Math.random() * 0.6; // active breathing sparkle
+                individualSpread = restingSpread * 2.80; // wider moderate spread
+                pScatterAmp = 0.90 + Math.random() * 0.80; // active breathing sparkle
                 pBaseAlpha = 0.25 + Math.random() * 0.25; // clearly visible mist (increased)
                 
                 const randVal = Math.random();
@@ -212,8 +212,8 @@ export default function ParticleCanvas({
               } else {
                 // Aura: highly dispersed outer cosmic dust
                 dispersionCategory = 'aura';
-                individualSpread = restingSpread * 3.8; // wider outer spread
-                pScatterAmp = 1.4 + Math.random() * 1.1; // floating freely
+                individualSpread = restingSpread * 4.80; // wider outer spread
+                pScatterAmp = 1.60 + Math.random() * 1.40; // floating freely
                 pBaseAlpha = 0.12 + Math.random() * 0.12; // clearly visible outer stardust (increased)
                 
                 const randVal = Math.random();

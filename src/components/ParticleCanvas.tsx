@@ -177,7 +177,7 @@ export default function ParticleCanvas({
               fy = randPoint.y;
             }
 
-            const numOutlineParticles = 1; // Set to 1 to reduce calculations and boost performance
+            const numOutlineParticles = 2; // Increased to 2 for higher particle density
             for (let i = 0; i < numOutlineParticles; i++) {
               // Stratified spread spectrum: many particles are tightly anchored to the outline,
               // while some fly out super-far to form a beautiful dramatic halo/aura of cosmic stardust
@@ -626,8 +626,8 @@ export default function ParticleCanvas({
           // Subtle individual size breathing fluctuation (feels sparkled, not global)
           finalDrawSize *= (1.0 + Math.sin(t * 2.5 + p.noiseSeed) * 0.12);
 
-          // Highly bright core (scaled up to 6.00x base) that fades smoothly to dim outer stardust
-          let finalDrawAlpha = Math.min(1.0, p.alpha * sizeBrightnessMult * 6.00 * Math.pow(fadeFactor, 2.0)); 
+          // High contrast core (scaled up to 3.20x base) that fades non-linearly to create a sharp bright center and dim outer glow
+          let finalDrawAlpha = Math.min(1.0, p.alpha * sizeBrightnessMult * 3.20 * Math.pow(fadeFactor, 2.20)); 
 
           if (totalBlurRadius > 0.4) {
             finalDrawSize = finalDrawSize + totalBlurRadius * 0.22;

@@ -666,7 +666,10 @@ export default function App() {
                     className="z-30 transition-all duration-300 select-none pointer-events-none"
                   >
                     <div className="text-left">
-                      <h1 className="text-3xl font-normal text-white tracking-wide mb-2">
+                      <h1 
+                        style={{ fontSize: '48px', fontWeight: 305 }} 
+                        className="text-white tracking-wide mb-2"
+                      >
                         超级算法
                       </h1>
                       <div className="h-[1px] bg-white/40 w-full" />
@@ -686,7 +689,10 @@ export default function App() {
                     className="z-30 transition-all duration-300 select-none pointer-events-none"
                   >
                     <div className="text-right flex flex-col items-end">
-                      <h1 className="text-3xl font-normal text-white tracking-wide mb-2">
+                      <h1 
+                        style={{ fontSize: '48px', fontWeight: 305 }} 
+                        className="text-white tracking-wide mb-2"
+                      >
                         超级本体
                       </h1>
                       <div className="h-[1px] bg-white/40 w-full" />
@@ -706,7 +712,10 @@ export default function App() {
                     className="z-30 transition-all duration-300 select-none pointer-events-none"
                   >
                     <div className="text-right flex flex-col items-end">
-                      <h1 className="text-3xl font-normal text-white tracking-wide mb-2">
+                      <h1 
+                        style={{ fontSize: '48px', fontWeight: 305 }} 
+                        className="text-white tracking-wide mb-2"
+                      >
                         超级应用
                       </h1>
                       <div className="h-[1px] bg-white/40 w-full" />
@@ -718,7 +727,10 @@ export default function App() {
               {/* Mobile view (< 1200px) */}
               <div className="block min-[1200px]:hidden absolute bottom-16 left-0 right-0 z-30 pointer-events-none select-none px-6">
                 <div className="text-center">
-                  <h1 className="text-2xl font-normal text-white tracking-wide">
+                  <h1 
+                    style={{ fontWeight: 305 }}
+                    className="text-2xl text-white tracking-wide"
+                  >
                     {SECTORS_DATA[activeSector].name}
                   </h1>
                 </div>

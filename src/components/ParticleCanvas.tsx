@@ -188,24 +188,24 @@ export default function ParticleCanvas({
               let pSize = 0;
               let pBaseAlpha = 0;
 
-              if (randSpread < 0.25) {
+              if (randSpread < 0.45) {
                 // Core: tightly bound to the outline to form the sharp main shape
                 dispersionCategory = 'core';
                 individualSpread = restingSpread * 0.20; // tight center line with a bit of natural body
                 pScatterAmp = 0.15 + Math.random() * 0.15; // very little movement to keep the core sharp
-                pBaseAlpha = 0.32 + Math.random() * 0.28; // bright core (increased)
+                pBaseAlpha = 0.42 + Math.random() * 0.28; // bright core (increased)
                 
                 const randVal = Math.random();
                 pSize = 0.24 + randVal * 0.24; // medium sized core particles
                 if (randVal > 0.85) {
                   pSize = 0.48 + Math.random() * 0.22; // accent core particles
                 }
-              } else if (randSpread < 0.75) {
+              } else if (randSpread < 0.80) {
                 // Cloud: moderately dispersed mist around the core
                 dispersionCategory = 'cloud';
                 individualSpread = restingSpread * 1.5; // wider moderate spread
                 pScatterAmp = 0.7 + Math.random() * 0.6; // active breathing sparkle
-                pBaseAlpha = 0.20 + Math.random() * 0.20; // clearly visible mist (increased)
+                pBaseAlpha = 0.25 + Math.random() * 0.25; // clearly visible mist (increased)
                 
                 const randVal = Math.random();
                 pSize = 0.18 + randVal * 0.22; // slightly larger particles for high visibility

@@ -191,8 +191,8 @@ export default function ParticleCanvas({
               if (randSpread < 0.45) {
                 // Core: tightly bound to the outline to form the sharp main shape
                 dispersionCategory = 'core';
-                individualSpread = restingSpread * 0.20; // tight center line with a bit of natural body
-                pScatterAmp = 0.15 + Math.random() * 0.15; // very little movement to keep the core sharp
+                individualSpread = restingSpread * 0.45; // wider bright particle belt (increased from 0.20)
+                pScatterAmp = 0.18 + Math.random() * 0.18; // slightly more movement for organic dispersion
                 pBaseAlpha = 0.42 + Math.random() * 0.28; // bright core (increased)
                 
                 const randVal = Math.random();
@@ -576,14 +576,25 @@ export default function ParticleCanvas({
           const physicalDepthBlur = Math.abs(p.z) * 0.08;
           const totalBlurRadius = (physicalDepthBlur + 1.2) * sizeBlurMult;
 
-          // Individualized organic drift: each particle undergoes slow, randomized hover wave motions
-          // using its own distinct frequencies, speeds and phases to ensure no coordinated global movement
-          const driftX = Math.sin(t * (p.breathSpeed * 2.5) + p.breathOffset) * p.scatterAmp * 12.5;
-          const driftY = Math.cos(t * (p.breathSpeed * 2.7) + p.breathOffset * 1.45) * p.scatterAmp * 12.5;
+          // Double-harmonic drift pattern for richer, pseudo-random chaotic paths
+          const driftX = (
+            Math.sin(t * (p.breathSpeed * 2.5) + p.breathOffset) * 0.70 +
+            Math.sin(t * (p.breathSpeed * 4.9) + p.noiseSeed) * 0.30
+          ) * p.scatterAmp * 12.5;
+          const driftY = (
+            Math.cos(t * (p.breathSpeed * 2.7) + p.breathOffset * 1.45) * 0.70 +
+            Math.cos(t * (p.breathSpeed * 3.8) + p.noiseSeed * 1.6) * 0.30
+          ) * p.scatterAmp * 12.5;
           
-          // Micro-vibrations for natural cosmic stardust sparkle
-          const jitterX = Math.sin(t * 11.5 + p.noiseSeed) * p.scatterAmp * 4.5;
-          const jitterY = Math.cos(t * 10.0 + p.noiseSeed * 1.25) * p.scatterAmp * 4.5;
+          // Double-harmonic micro-vibrations for atmospheric scintillation (twinkling)
+          const jitterX = (
+            Math.sin(t * 11.5 + p.noiseSeed) * 0.75 +
+            Math.sin(t * 19.3 - p.breathOffset) * 0.25
+          ) * p.scatterAmp * 4.5;
+          const jitterY = (
+            Math.cos(t * 10.0 + p.noiseSeed * 1.25) * 0.75 +
+            Math.cos(t * 17.1 + p.breathOffset * 0.8) * 0.25
+          ) * p.scatterAmp * 4.5;
 
           const drawX = p.x + driftX + jitterX;
           const drawY = p.y + driftY + jitterY;

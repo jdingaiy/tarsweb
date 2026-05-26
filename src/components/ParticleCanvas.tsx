@@ -491,7 +491,7 @@ export default function ParticleCanvas({
           finalDrawSize *= (1.0 + Math.sin(t * 2.5 + p.noiseSeed) * 0.12 * (1.0 - p.currentRatio));
 
           // Make the inactive parts of the logo significantly dimmer in hover state
-          let finalDrawAlpha = (p.alpha * sizeBrightnessMult * 0.15) / (1.0 + totalBlurRadius * 0.3); 
+          let finalDrawAlpha = (p.alpha * sizeBrightnessMult * 0.04) / (1.0 + totalBlurRadius * 0.3); 
 
           if (finalDrawAlpha > 0.005) {
             // Draw soft glow/bloom halo (subtle and tight)

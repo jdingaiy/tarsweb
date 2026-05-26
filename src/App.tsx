@@ -290,7 +290,7 @@ export default function App() {
       >
         {/* Header background blur layer (only blurs the 56px area) to avoid nested backdrop-filter browser rendering bug */}
         <div className="absolute inset-0 bg-transparent backdrop-blur-xl border-b border-white/10 pointer-events-none -z-10" />
-        <nav className="mx-auto flex h-full max-w-[2560px] items-center justify-between px-4 sm:px-6 md:px-8 xl:px-12 min-[1440px]:px-[240px]">
+        <nav className="mx-auto flex h-full max-w-[2560px] items-center justify-between px-4 sm:px-6 md:px-8 xl:px-12 2xl:px-[240px]">
           {/* Left branding - official logo made white via CSS filter */}
           <div className="flex items-center" onMouseEnter={() => { if (activeDropdown) setActiveDropdown(null); }}>
             <a 
@@ -327,7 +327,7 @@ export default function App() {
                 </button>
                 {/* Mega Menu Panel - Frosted Glassmorphism */}
                 <div className={`dropdown-panel-algorithm fixed inset-x-0 top-14 left-0 right-0 w-full bg-transparent backdrop-blur-xl border-b border-white/10 shadow-2xl transition-all duration-200 z-50 ${activeDropdown === 'algorithm' ? 'opacity-100 pointer-events-auto translate-y-0' : 'opacity-0 pointer-events-none -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto'}`}>
-                  <div className="mx-auto max-w-[2560px] px-4 pb-10 pt-6 sm:px-6 md:px-8 xl:px-12 min-[1440px]:px-[240px]">
+                  <div className="mx-auto max-w-[2560px] px-4 pb-10 pt-6 sm:px-6 md:px-8 xl:px-12 2xl:px-[240px]">
                     {/* Grid of links */}
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full text-left">
                       <a 
@@ -378,7 +378,7 @@ export default function App() {
                 </button>
                 {/* Mega Menu Panel - Frosted Glassmorphism */}
                 <div className={`dropdown-panel-ontology fixed inset-x-0 top-14 left-0 right-0 w-full bg-transparent backdrop-blur-xl border-b border-white/10 shadow-2xl transition-all duration-200 z-50 ${activeDropdown === 'ontology' ? 'opacity-100 pointer-events-auto translate-y-0' : 'opacity-0 pointer-events-none -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto'}`}>
-                  <div className="mx-auto max-w-[2560px] px-4 pb-10 pt-6 sm:px-6 md:px-8 xl:px-12 min-[1440px]:px-[240px]">
+                  <div className="mx-auto max-w-[2560px] px-4 pb-10 pt-6 sm:px-6 md:px-8 xl:px-12 2xl:px-[240px]">
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-6 w-full text-left">
                       <a 
                         href="https://www-dev.tars-ai.com/zh/products/a-series/" 
@@ -437,7 +437,7 @@ export default function App() {
                 </button>
                 {/* Mega Menu Panel - Frosted Glassmorphism */}
                 <div className={`dropdown-panel-application fixed inset-x-0 top-14 left-0 right-0 w-full bg-transparent backdrop-blur-xl border-b border-white/10 shadow-2xl transition-all duration-200 z-50 ${activeDropdown === 'application' ? 'opacity-100 pointer-events-auto translate-y-0' : 'opacity-0 pointer-events-none -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto'}`}>
-                  <div className="mx-auto max-w-[2560px] px-4 pb-10 pt-6 sm:px-6 md:px-8 xl:px-12 min-[1440px]:px-[240px]">
+                  <div className="mx-auto max-w-[2560px] px-4 pb-10 pt-6 sm:px-6 md:px-8 xl:px-12 2xl:px-[240px]">
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full text-left">
                       <a 
                         href="https://www-dev.tars-ai.com/zh/products/awr/" 
@@ -463,7 +463,7 @@ export default function App() {
                 </button>
                 {/* Mega Menu Panel - Frosted Glassmorphism */}
                 <div className="fixed inset-x-0 top-14 left-0 right-0 w-full bg-transparent backdrop-blur-xl border-b border-white/10 shadow-2xl transition-all duration-200 opacity-0 pointer-events-none -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto z-50">
-                  <div className="mx-auto max-w-[2560px] px-4 pb-10 pt-6 sm:px-6 md:px-8 xl:px-12 min-[1440px]:px-[240px]">
+                  <div className="mx-auto max-w-[2560px] px-4 pb-10 pt-6 sm:px-6 md:px-8 xl:px-12 2xl:px-[240px]">
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full text-left">
                       <a 
                         href="https://www-dev.tars-ai.com/zh/about/" 

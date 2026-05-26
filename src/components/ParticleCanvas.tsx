@@ -188,12 +188,12 @@ export default function ParticleCanvas({
               let pSize = 0;
               let pBaseAlpha = 0;
 
-              if (randSpread < 0.55) {
+              if (randSpread < 0.50) {
                 // Core: tightly bound to the outline to form the sharp main shape
                 dispersionCategory = 'core';
-                individualSpread = restingSpread * 1.80; // wider bright particle belt (further expanded)
-                pScatterAmp = 0.50 + Math.random() * 0.50; // wider movement for organic dispersion
-                pBaseAlpha = 0.42 + Math.random() * 0.28; // bright core (increased)
+                individualSpread = restingSpread * 0.12; // tight center line (reduced from 1.80)
+                pScatterAmp = 0.08 + Math.random() * 0.08; // very little movement to keep the core sharp
+                pBaseAlpha = 0.65 + Math.random() * 0.25; // extremely bright core (increased)
                 
                 const randVal = Math.random();
                 pSize = 0.16 + randVal * 0.16; // smaller core particles (0.16 to 0.32)
@@ -203,18 +203,18 @@ export default function ParticleCanvas({
               } else if (randSpread < 0.85) {
                 // Cloud: moderately dispersed mist around the core
                 dispersionCategory = 'cloud';
-                individualSpread = restingSpread * 2.80; // wider moderate spread
-                pScatterAmp = 0.90 + Math.random() * 0.80; // active breathing sparkle
-                pBaseAlpha = 0.25 + Math.random() * 0.25; // clearly visible mist (increased)
+                individualSpread = restingSpread * 2.50; // wider moderate spread
+                pScatterAmp = 0.85 + Math.random() * 0.75; // active breathing sparkle
+                pBaseAlpha = 0.18 + Math.random() * 0.18; // misty stardust (reduced from 0.25)
                 
                 const randVal = Math.random();
                 pSize = 0.12 + randVal * 0.14; // smaller cloud particles (0.12 to 0.26)
               } else {
                 // Aura: highly dispersed outer cosmic dust
                 dispersionCategory = 'aura';
-                individualSpread = restingSpread * 4.80; // wider outer spread
+                individualSpread = restingSpread * 4.50; // wider outer spread
                 pScatterAmp = 1.60 + Math.random() * 1.40; // floating freely
-                pBaseAlpha = 0.12 + Math.random() * 0.12; // clearly visible outer stardust (increased)
+                pBaseAlpha = 0.08 + Math.random() * 0.10; // very faint outer stardust (reduced from 0.12)
                 
                 const randVal = Math.random();
                 pSize = 0.08 + randVal * 0.10; // smaller aura particles (0.08 to 0.18)
@@ -562,7 +562,31 @@ export default function ParticleCanvas({
 
       } else {
         // Pass 3c: Resting state - draw all particles normally with standard optical focus variance
-        // Pass 3c: Resting state - draw all particles normally with standard optical focus variance
+        
+        // Draw a soft, hardware-accelerated ambient outline glow behind the particles
+        ctx.save();
+        ctx.setTransform(1, 0, 0, 1, 0, 0); // reset transform to identity
+        ctx.translate(logoScreenX, logoScreenY);
+        ctx.scale(scale, scale);
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        
+        // Very wide soft glow
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.010)';
+        ctx.lineWidth = 36;
+        ctx.stroke(pathAlgorithm);
+        ctx.stroke(pathOntology);
+        ctx.stroke(pathApplication);
+
+        // Medium soft glow
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.024)';
+        ctx.lineWidth = 16;
+        ctx.stroke(pathAlgorithm);
+        ctx.stroke(pathOntology);
+        ctx.stroke(pathApplication);
+        
+        ctx.restore();
+
         particlesRef.current.forEach((p) => {
           // Performance Optimization: Only draw 15% of the fill particles in resting state
           if (p.isFillOnly && (p.noiseSeed % 100 > 15)) {

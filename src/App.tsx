@@ -273,6 +273,8 @@ export default function App() {
   // Symmetrical full-screen grid math to align precisely with center-anchored design
   const scaleFactor = dimensions.width < 1120 ? Math.max(0.5, dimensions.width / 1120) : 1.0;
   const boundaryPadding = dimensions.width >= 1440 ? 240 : 48;
+  const logoBaseScale = dimensions.width >= 1440 ? 0.68 : 0.88;
+  const currentLogoScale = logoBaseScale * scaleFactor;
   const cellSize = 80 * scaleFactor;
   const cardSize = 160 * scaleFactor;
   const cX = dimensions.width / 2;
@@ -657,8 +659,8 @@ export default function App() {
                     style={{
                       position: 'absolute',
                       left: `${boundaryPadding}px`,
-                      top: `calc(50% - ${20 * scaleFactor}px)`,
-                      width: `calc(50vw - ${boundaryPadding}px - ${130 * scaleFactor}px)`,
+                      top: `calc(50% - ${(82 * logoBaseScale + 10) * scaleFactor}px)`,
+                      width: `calc(50vw - ${boundaryPadding}px - ${130 * currentLogoScale}px)`,
                       transform: 'translateY(-50%)',
                     }}
                     className="z-30 transition-all duration-300 select-none pointer-events-none"
@@ -677,8 +679,8 @@ export default function App() {
                     style={{
                       position: 'absolute',
                       right: `${boundaryPadding}px`,
-                      top: `calc(50% - ${140 * scaleFactor}px)`,
-                      width: `calc(50vw - ${boundaryPadding}px - ${135 * scaleFactor}px)`,
+                      top: `calc(50% - ${(230 * logoBaseScale + 10) * scaleFactor}px)`,
+                      width: `calc(50vw - ${boundaryPadding}px - ${140 * currentLogoScale}px)`,
                       transform: 'translateY(-50%)',
                     }}
                     className="z-30 transition-all duration-300 select-none pointer-events-none"
@@ -697,8 +699,8 @@ export default function App() {
                     style={{
                       position: 'absolute',
                       right: `${boundaryPadding}px`,
-                      top: `calc(50% + ${80 * scaleFactor}px)`,
-                      width: `calc(50vw - ${boundaryPadding}px - ${110 * scaleFactor}px)`,
+                      top: `calc(50% + ${(83.5 * logoBaseScale - 10) * scaleFactor}px)`,
+                      width: `calc(50vw - ${boundaryPadding}px - ${110 * currentLogoScale}px)`,
                       transform: 'translateY(-50%)',
                     }}
                     className="z-30 transition-all duration-300 select-none pointer-events-none"

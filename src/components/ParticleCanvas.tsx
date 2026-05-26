@@ -91,7 +91,7 @@ export default function ParticleCanvas({
 
     // Render outline on template canvas 1
     // Thinner line yields precise outlines, thicker fills look nicely dense
-    oCtx.lineWidth = 1.5; 
+    oCtx.lineWidth = 3.5; 
     oCtx.strokeStyle = 'rgb(255, 0, 0)'; // Red -> Algorithm
     oCtx.stroke(pathAlgorithm);
 
@@ -196,9 +196,9 @@ export default function ParticleCanvas({
                 pBaseAlpha = 0.32 + Math.random() * 0.28; // bright core (increased)
                 
                 const randVal = Math.random();
-                pSize = 0.24 + randVal * 0.24; // medium sized core particles
+                pSize = 0.35 + randVal * 0.35; // larger core particles
                 if (randVal > 0.85) {
-                  pSize = 0.48 + Math.random() * 0.22; // accent core particles
+                  pSize = 0.65 + Math.random() * 0.35; // accent core particles
                 }
               } else if (randSpread < 0.75) {
                 // Cloud: moderately dispersed mist around the core
@@ -578,12 +578,12 @@ export default function ParticleCanvas({
 
           // Individualized organic drift: each particle undergoes slow, randomized hover wave motions
           // using its own distinct frequencies, speeds and phases to ensure no coordinated global movement
-          const driftX = Math.sin(t * (p.breathSpeed * 1.2) + p.breathOffset) * p.scatterAmp * 7.5;
-          const driftY = Math.cos(t * (p.breathSpeed * 1.3) + p.breathOffset * 1.45) * p.scatterAmp * 7.5;
+          const driftX = Math.sin(t * (p.breathSpeed * 2.5) + p.breathOffset) * p.scatterAmp * 12.5;
+          const driftY = Math.cos(t * (p.breathSpeed * 2.7) + p.breathOffset * 1.45) * p.scatterAmp * 12.5;
           
           // Micro-vibrations for natural cosmic stardust sparkle
-          const jitterX = Math.sin(t * 5.5 + p.noiseSeed) * p.scatterAmp * 2.5;
-          const jitterY = Math.cos(t * 4.8 + p.noiseSeed * 1.25) * p.scatterAmp * 2.5;
+          const jitterX = Math.sin(t * 11.5 + p.noiseSeed) * p.scatterAmp * 4.5;
+          const jitterY = Math.cos(t * 10.0 + p.noiseSeed * 1.25) * p.scatterAmp * 4.5;
 
           const drawX = p.x + driftX + jitterX;
           const drawY = p.y + driftY + jitterY;
@@ -597,7 +597,7 @@ export default function ParticleCanvas({
             scanGlow = Math.pow(Math.cos((distToScan / 90) * Math.PI / 2), 4.0) * 1.8;
           }
 
-          let finalDrawSize = p.size * 0.95;
+          let finalDrawSize = p.size * 1.45;
           // Subtle individual size breathing fluctuation (feels sparkled, not global)
           finalDrawSize *= (1.0 + Math.sin(t * 2.5 + p.noiseSeed) * 0.12);
 

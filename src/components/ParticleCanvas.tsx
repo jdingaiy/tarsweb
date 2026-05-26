@@ -193,8 +193,8 @@ export default function ParticleCanvas({
               if (randSpread < 0.50) {
                 // Core: tightly bound to the outline to form the sharp main shape
                 dispersionCategory = 'core';
-                individualSpread = restingSpread * 1.10; // wider core belt for fluffy stardust outline
-                pScatterAmp = 0.28 + Math.random() * 0.28; // organic drift
+                individualSpread = restingSpread * 2.20; // wider core belt for fluffy stardust outline (was 1.10)
+                pScatterAmp = 0.60 + Math.random() * 0.60; // organic drift (was 0.28)
                 pBaseAlpha = 0.45 + Math.random() * 0.25; // bright core (increased)
                 
                 const randVal = Math.random();
@@ -205,8 +205,8 @@ export default function ParticleCanvas({
               } else if (randSpread < 0.85) {
                 // Cloud: moderately dispersed mist around the core
                 dispersionCategory = 'cloud';
-                individualSpread = restingSpread * 2.50; // wider moderate spread
-                pScatterAmp = 0.85 + Math.random() * 0.75; // active breathing sparkle
+                individualSpread = restingSpread * 3.60; // wider moderate spread (was 2.50)
+                pScatterAmp = 1.20 + Math.random() * 1.00; // active breathing sparkle (was 0.85)
                 pBaseAlpha = 0.18 + Math.random() * 0.18; // misty stardust (reduced from 0.25)
                 
                 const randVal = Math.random();
@@ -214,8 +214,8 @@ export default function ParticleCanvas({
               } else {
                 // Aura: highly dispersed outer cosmic dust
                 dispersionCategory = 'aura';
-                individualSpread = restingSpread * 4.50; // wider outer spread
-                pScatterAmp = 1.60 + Math.random() * 1.40; // floating freely
+                individualSpread = restingSpread * 5.50; // wider outer spread (was 4.50)
+                pScatterAmp = 2.00 + Math.random() * 1.80; // floating freely (was 1.60)
                 pBaseAlpha = 0.08 + Math.random() * 0.10; // very faint outer stardust (reduced from 0.12)
                 
                 const randVal = Math.random();
@@ -621,7 +621,7 @@ export default function ParticleCanvas({
           const displacement = Math.sqrt(totalDx * totalDx + totalDy * totalDy);
           
           // Define a soft decay radius based on the particle's category and scale
-          const decayRadius = (p.isFillOnly ? 15.0 : (p.dispersionCategory === 'core' ? 12.0 : (p.dispersionCategory === 'cloud' ? 24.0 : 45.0))) * scale;
+          const decayRadius = (p.isFillOnly ? 20.0 : (p.dispersionCategory === 'core' ? 24.0 : (p.dispersionCategory === 'cloud' ? 48.0 : 80.0))) * scale;
           
           let fadeFactor = 1.0;
           if (decayRadius > 0.1) {

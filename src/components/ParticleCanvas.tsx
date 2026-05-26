@@ -91,7 +91,7 @@ export default function ParticleCanvas({
 
     // Render outline on template canvas 1
     // Thinner line yields precise outlines, thicker fills look nicely dense
-    oCtx.lineWidth = 3.5; 
+    oCtx.lineWidth = 1.5; 
     oCtx.strokeStyle = 'rgb(255, 0, 0)'; // Red -> Algorithm
     oCtx.stroke(pathAlgorithm);
 
@@ -196,9 +196,9 @@ export default function ParticleCanvas({
                 pBaseAlpha = 0.32 + Math.random() * 0.28; // bright core (increased)
                 
                 const randVal = Math.random();
-                pSize = 0.35 + randVal * 0.35; // larger core particles
+                pSize = 0.24 + randVal * 0.24; // medium sized core particles
                 if (randVal > 0.85) {
-                  pSize = 0.65 + Math.random() * 0.35; // accent core particles
+                  pSize = 0.48 + Math.random() * 0.22; // accent core particles
                 }
               } else if (randSpread < 0.75) {
                 // Cloud: moderately dispersed mist around the core
@@ -597,11 +597,20 @@ export default function ParticleCanvas({
             scanGlow = Math.pow(Math.cos((distToScan / 90) * Math.PI / 2), 4.0) * 1.8;
           }
 
-          let finalDrawSize = p.size * 1.45;
+          let finalDrawSize = p.size * 0.95;
           // Subtle individual size breathing fluctuation (feels sparkled, not global)
           finalDrawSize *= (1.0 + Math.sin(t * 2.5 + p.noiseSeed) * 0.12);
 
-          let finalDrawAlpha = p.alpha * sizeBrightnessMult * 1.45; // Dimmer baseline outline to make scan lines pop out
+          // Calculate displacement from outline to smoothly fade brightness as particles drift
+          const displacement = Math.sqrt(driftX * driftX + driftY * driftY);
+          const maxDrift = p.scatterAmp * 12.5;
+          let fadeFactor = 1.0;
+          if (maxDrift > 0.1) {
+            const ratio = Math.min(1.0, displacement / maxDrift);
+            fadeFactor = 1.0 - ratio * 0.72; // fade down to 28% brightness at max drift
+          }
+
+          let finalDrawAlpha = p.alpha * sizeBrightnessMult * 0.75 * fadeFactor; 
 
           if (totalBlurRadius > 0.4) {
             finalDrawSize = finalDrawSize + totalBlurRadius * 0.22;

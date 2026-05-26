@@ -177,7 +177,7 @@ export default function ParticleCanvas({
               fy = randPoint.y;
             }
 
-            const numOutlineParticles = 2; // Increased to 2 for higher particle density
+            const numOutlineParticles = 3; // Increased to 3 for higher particle density
             for (let i = 0; i < numOutlineParticles; i++) {
               // Stratified spread spectrum: many particles are tightly anchored to the outline,
               // while some fly out super-far to form a beautiful dramatic halo/aura of cosmic stardust
@@ -188,7 +188,7 @@ export default function ParticleCanvas({
               let pSize = 0;
               let pBaseAlpha = 0;
 
-              if (randSpread < 0.45) {
+              if (randSpread < 0.55) {
                 // Core: tightly bound to the outline to form the sharp main shape
                 dispersionCategory = 'core';
                 individualSpread = restingSpread * 1.80; // wider bright particle belt (further expanded)
@@ -196,11 +196,11 @@ export default function ParticleCanvas({
                 pBaseAlpha = 0.42 + Math.random() * 0.28; // bright core (increased)
                 
                 const randVal = Math.random();
-                pSize = 0.24 + randVal * 0.24; // medium sized core particles
+                pSize = 0.16 + randVal * 0.16; // smaller core particles (0.16 to 0.32)
                 if (randVal > 0.85) {
-                  pSize = 0.48 + Math.random() * 0.22; // accent core particles
+                  pSize = 0.32 + Math.random() * 0.15; // smaller accent core particles (0.32 to 0.47)
                 }
-              } else if (randSpread < 0.80) {
+              } else if (randSpread < 0.85) {
                 // Cloud: moderately dispersed mist around the core
                 dispersionCategory = 'cloud';
                 individualSpread = restingSpread * 2.80; // wider moderate spread
@@ -208,7 +208,7 @@ export default function ParticleCanvas({
                 pBaseAlpha = 0.25 + Math.random() * 0.25; // clearly visible mist (increased)
                 
                 const randVal = Math.random();
-                pSize = 0.18 + randVal * 0.22; // slightly larger particles for high visibility
+                pSize = 0.12 + randVal * 0.14; // smaller cloud particles (0.12 to 0.26)
               } else {
                 // Aura: highly dispersed outer cosmic dust
                 dispersionCategory = 'aura';
@@ -217,7 +217,7 @@ export default function ParticleCanvas({
                 pBaseAlpha = 0.12 + Math.random() * 0.12; // clearly visible outer stardust (increased)
                 
                 const randVal = Math.random();
-                pSize = 0.10 + randVal * 0.16; // clearly visible fine particles
+                pSize = 0.08 + randVal * 0.10; // smaller aura particles (0.08 to 0.18)
               }
 
               const jitterX = (Math.random() - 0.5) * individualSpread;

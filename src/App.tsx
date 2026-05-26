@@ -272,6 +272,7 @@ export default function App() {
 
   // Symmetrical full-screen grid math to align precisely with center-anchored design
   const scaleFactor = dimensions.width < 1120 ? Math.max(0.5, dimensions.width / 1120) : 1.0;
+  const boundaryPadding = dimensions.width >= 1440 ? 240 : 48;
   const cellSize = 80 * scaleFactor;
   const cardSize = 160 * scaleFactor;
   const cX = dimensions.width / 2;
@@ -289,7 +290,7 @@ export default function App() {
       >
         {/* Header background blur layer (only blurs the 56px area) to avoid nested backdrop-filter browser rendering bug */}
         <div className="absolute inset-0 bg-transparent backdrop-blur-xl border-b border-white/10 pointer-events-none -z-10" />
-        <nav className="mx-auto flex h-full max-w-[2560px] items-center justify-between px-4 sm:px-6 md:px-8 xl:px-12 2xl:px-[240px]">
+        <nav className="mx-auto flex h-full max-w-[2560px] items-center justify-between px-4 sm:px-6 md:px-8 xl:px-12 min-[1440px]:px-[240px]">
           {/* Left branding - official logo made white via CSS filter */}
           <div className="flex items-center" onMouseEnter={() => { if (activeDropdown) setActiveDropdown(null); }}>
             <a 
@@ -326,7 +327,7 @@ export default function App() {
                 </button>
                 {/* Mega Menu Panel - Frosted Glassmorphism */}
                 <div className={`dropdown-panel-algorithm fixed inset-x-0 top-14 left-0 right-0 w-full bg-transparent backdrop-blur-xl border-b border-white/10 shadow-2xl transition-all duration-200 z-50 ${activeDropdown === 'algorithm' ? 'opacity-100 pointer-events-auto translate-y-0' : 'opacity-0 pointer-events-none -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto'}`}>
-                  <div className="mx-auto max-w-[2560px] px-4 pb-10 pt-6 sm:px-6 md:px-8 xl:px-12 2xl:px-[240px]">
+                  <div className="mx-auto max-w-[2560px] px-4 pb-10 pt-6 sm:px-6 md:px-8 xl:px-12 min-[1440px]:px-[240px]">
                     {/* Grid of links */}
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full text-left">
                       <a 
@@ -377,7 +378,7 @@ export default function App() {
                 </button>
                 {/* Mega Menu Panel - Frosted Glassmorphism */}
                 <div className={`dropdown-panel-ontology fixed inset-x-0 top-14 left-0 right-0 w-full bg-transparent backdrop-blur-xl border-b border-white/10 shadow-2xl transition-all duration-200 z-50 ${activeDropdown === 'ontology' ? 'opacity-100 pointer-events-auto translate-y-0' : 'opacity-0 pointer-events-none -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto'}`}>
-                  <div className="mx-auto max-w-[2560px] px-4 pb-10 pt-6 sm:px-6 md:px-8 xl:px-12 2xl:px-[240px]">
+                  <div className="mx-auto max-w-[2560px] px-4 pb-10 pt-6 sm:px-6 md:px-8 xl:px-12 min-[1440px]:px-[240px]">
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-6 w-full text-left">
                       <a 
                         href="https://www-dev.tars-ai.com/zh/products/a-series/" 
@@ -436,7 +437,7 @@ export default function App() {
                 </button>
                 {/* Mega Menu Panel - Frosted Glassmorphism */}
                 <div className={`dropdown-panel-application fixed inset-x-0 top-14 left-0 right-0 w-full bg-transparent backdrop-blur-xl border-b border-white/10 shadow-2xl transition-all duration-200 z-50 ${activeDropdown === 'application' ? 'opacity-100 pointer-events-auto translate-y-0' : 'opacity-0 pointer-events-none -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto'}`}>
-                  <div className="mx-auto max-w-[2560px] px-4 pb-10 pt-6 sm:px-6 md:px-8 xl:px-12 2xl:px-[240px]">
+                  <div className="mx-auto max-w-[2560px] px-4 pb-10 pt-6 sm:px-6 md:px-8 xl:px-12 min-[1440px]:px-[240px]">
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full text-left">
                       <a 
                         href="https://www-dev.tars-ai.com/zh/products/awr/" 
@@ -462,7 +463,7 @@ export default function App() {
                 </button>
                 {/* Mega Menu Panel - Frosted Glassmorphism */}
                 <div className="fixed inset-x-0 top-14 left-0 right-0 w-full bg-transparent backdrop-blur-xl border-b border-white/10 shadow-2xl transition-all duration-200 opacity-0 pointer-events-none -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto z-50">
-                  <div className="mx-auto max-w-[2560px] px-4 pb-10 pt-6 sm:px-6 md:px-8 xl:px-12 2xl:px-[240px]">
+                  <div className="mx-auto max-w-[2560px] px-4 pb-10 pt-6 sm:px-6 md:px-8 xl:px-12 min-[1440px]:px-[240px]">
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full text-left">
                       <a 
                         href="https://www-dev.tars-ai.com/zh/about/" 
@@ -646,15 +647,81 @@ export default function App() {
             />
           </div>
 
-          {/* 3. Unified Subtitles display in the bottom-left corner of the screen */}
+          {/* 3. Unified Subtitles / Guiding Line layout */}
           {activeSector && (
-            <div className="absolute bottom-16 left-4 sm:left-6 md:left-8 xl:left-12 2xl:left-[240px] z-30 pointer-events-none select-none max-w-lg">
-              <div className="select-none pointer-events-none transition-all duration-300">
-                <h1 className="text-3xl font-semibold text-white tracking-wide transition-all duration-300">
-                  {SECTORS_DATA[activeSector].name}
-                </h1>
+            <>
+              {/* Desktop view (>= 1200px) */}
+              <div className="hidden min-[1200px]:block">
+                {activeSector === 'algorithm' && (
+                  <div 
+                    style={{
+                      position: 'absolute',
+                      left: `${boundaryPadding}px`,
+                      top: `calc(50% - ${20 * scaleFactor}px)`,
+                      width: `calc(50vw - ${boundaryPadding}px - ${130 * scaleFactor}px)`,
+                      transform: 'translateY(-50%)',
+                    }}
+                    className="z-30 transition-all duration-300 select-none pointer-events-none"
+                  >
+                    <div className="text-left">
+                      <h1 className="text-3xl font-semibold text-white tracking-wide mb-2">
+                        超级算法
+                      </h1>
+                      <div className="h-[1px] bg-white/40 w-full" />
+                    </div>
+                  </div>
+                )}
+
+                {activeSector === 'ontology' && (
+                  <div 
+                    style={{
+                      position: 'absolute',
+                      right: `${boundaryPadding}px`,
+                      top: `calc(50% - ${140 * scaleFactor}px)`,
+                      width: `calc(50vw - ${boundaryPadding}px - ${135 * scaleFactor}px)`,
+                      transform: 'translateY(-50%)',
+                    }}
+                    className="z-30 transition-all duration-300 select-none pointer-events-none"
+                  >
+                    <div className="text-right flex flex-col items-end">
+                      <h1 className="text-3xl font-semibold text-white tracking-wide mb-2">
+                        超级本体
+                      </h1>
+                      <div className="h-[1px] bg-white/40 w-full" />
+                    </div>
+                  </div>
+                )}
+
+                {activeSector === 'application' && (
+                  <div 
+                    style={{
+                      position: 'absolute',
+                      right: `${boundaryPadding}px`,
+                      top: `calc(50% + ${80 * scaleFactor}px)`,
+                      width: `calc(50vw - ${boundaryPadding}px - ${110 * scaleFactor}px)`,
+                      transform: 'translateY(-50%)',
+                    }}
+                    className="z-30 transition-all duration-300 select-none pointer-events-none"
+                  >
+                    <div className="text-right flex flex-col items-end">
+                      <h1 className="text-3xl font-semibold text-white tracking-wide mb-2">
+                        超级应用
+                      </h1>
+                      <div className="h-[1px] bg-white/40 w-full" />
+                    </div>
+                  </div>
+                )}
               </div>
-            </div>
+
+              {/* Mobile view (< 1200px) */}
+              <div className="block min-[1200px]:hidden absolute bottom-16 left-0 right-0 z-30 pointer-events-none select-none px-6">
+                <div className="text-center">
+                  <h1 className="text-2xl font-semibold text-white tracking-wide">
+                    {SECTORS_DATA[activeSector].name}
+                  </h1>
+                </div>
+              </div>
+            </>
           )}
 
         </div>

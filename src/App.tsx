@@ -667,7 +667,7 @@ export default function App() {
                   >
                     <div className="text-left">
                       <h1 
-                        style={{ fontSize: '48px', fontWeight: 305 }} 
+                        style={{ fontSize: '40px', fontWeight: 305 }} 
                         className="text-white tracking-wide mb-2"
                       >
                         超级算法
@@ -690,7 +690,7 @@ export default function App() {
                   >
                     <div className="text-right flex flex-col items-end">
                       <h1 
-                        style={{ fontSize: '48px', fontWeight: 305 }} 
+                        style={{ fontSize: '40px', fontWeight: 305 }} 
                         className="text-white tracking-wide mb-2"
                       >
                         超级本体
@@ -713,7 +713,7 @@ export default function App() {
                   >
                     <div className="text-right flex flex-col items-end">
                       <h1 
-                        style={{ fontSize: '48px', fontWeight: 305 }} 
+                        style={{ fontSize: '40px', fontWeight: 305 }} 
                         className="text-white tracking-wide mb-2"
                       >
                         超级应用

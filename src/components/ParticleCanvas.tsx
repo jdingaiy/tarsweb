@@ -352,7 +352,7 @@ export default function ParticleCanvas({
   useEffect(() => {
     // Elegant responsive scale perfectly matched with the App page's grid cell layout to never overlap cards
     const isLargeDesktop = typeof window !== 'undefined' && window.innerWidth >= 1440;
-    const baseScale = isLargeDesktop ? 0.68 : 0.88;
+    const baseScale = isLargeDesktop ? 0.88 : 0.68;
     const scaleFactor = dimensions.width < 1120 ? Math.max(0.5, dimensions.width / 1120) : 1.0;
     const s = baseScale * scaleFactor; // Scale down above 1440px to give content breathing room
     scaleRef.current = s;

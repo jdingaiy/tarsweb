@@ -273,7 +273,7 @@ export default function App() {
   // Symmetrical full-screen grid math to align precisely with center-anchored design
   const scaleFactor = dimensions.width < 1120 ? Math.max(0.5, dimensions.width / 1120) : 1.0;
   const boundaryPadding = dimensions.width >= 1440 ? 240 : 48;
-  const logoBaseScale = dimensions.width >= 1440 ? 0.68 : 0.88;
+  const logoBaseScale = dimensions.width >= 1440 ? 0.88 : 0.68;
   const currentLogoScale = logoBaseScale * scaleFactor;
   const cellSize = 80 * scaleFactor;
   const cardSize = 160 * scaleFactor;

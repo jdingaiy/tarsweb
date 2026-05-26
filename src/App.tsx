@@ -55,6 +55,16 @@ export default function App() {
     const handleOutsideClick = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
       
+      // Mobile: click outside canvas deactivates active state
+      const isMobile = window.innerWidth < 1200;
+      if (isMobile) {
+        if (target.closest('canvas')) return;
+        if (activeSector !== null) {
+          setActiveSector(null);
+        }
+        return;
+      }
+
       // If no dropdown is open, nothing to do
       if (!activeDropdown) return;
 
@@ -80,7 +90,7 @@ export default function App() {
     };
     window.addEventListener('click', handleOutsideClick);
     return () => window.removeEventListener('click', handleOutsideClick);
-  }, [activeDropdown]);
+  }, [activeDropdown, activeSector]);
 
   const flashlightOverlayRef = React.useRef<HTMLDivElement | null>(null);
 
@@ -207,8 +217,10 @@ export default function App() {
     const isActive = activeSector === id;
     const isAnyActive = activeSector !== null;
 
+    const isMobile = dimensions.width < 1200;
+
     const zIndex = isActive ? 5 : 1;
-    const opacity = isActive ? 1.0 : (isAnyActive ? 0.0 : 1.0);
+    const opacity = isMobile ? (isActive ? 1.0 : 0.0) : (isActive ? 1.0 : (isAnyActive ? 0.0 : 1.0));
 
     const maskImage = isActive 
       ? 'none' 
@@ -306,7 +318,7 @@ export default function App() {
                 <button 
                   type="button" 
                   className={`header-btn-algorithm inline-flex shrink-0 items-center rounded-[2px] px-3 py-1 text-[14px] font-bold leading-5 whitespace-nowrap transition-colors touch-manipulation focus-visible:outline-none cursor-pointer ${
-                    activeDropdown === 'algorithm' || activeSector === 'algorithm' ? 'text-[#0050b5]' : 'text-white hover:text-[#0050b5]'
+                    activeDropdown === 'algorithm' ? 'text-[#0050b5]' : 'text-white hover:text-[#0050b5]'
                   }`}
                   onClick={() => setActiveDropdown(activeDropdown === 'algorithm' ? null : 'algorithm')}
                 >
@@ -357,7 +369,7 @@ export default function App() {
                 <button 
                   type="button" 
                   className={`header-btn-ontology inline-flex shrink-0 items-center rounded-[2px] px-3 py-1 text-[14px] font-bold leading-5 whitespace-nowrap transition-colors touch-manipulation focus-visible:outline-none cursor-pointer ${
-                    activeDropdown === 'ontology' || activeSector === 'ontology' ? 'text-[#0050b5]' : 'text-white hover:text-[#0050b5]'
+                    activeDropdown === 'ontology' ? 'text-[#0050b5]' : 'text-white hover:text-[#0050b5]'
                   }`}
                   onClick={() => setActiveDropdown(activeDropdown === 'ontology' ? null : 'ontology')}
                 >
@@ -416,7 +428,7 @@ export default function App() {
                 <button 
                   type="button" 
                   className={`header-btn-application inline-flex shrink-0 items-center rounded-[2px] px-3 py-1 text-[14px] font-bold leading-5 whitespace-nowrap transition-colors touch-manipulation focus-visible:outline-none cursor-pointer ${
-                    activeDropdown === 'application' || activeSector === 'application' ? 'text-[#0050b5]' : 'text-white hover:text-[#0050b5]'
+                    activeDropdown === 'application' ? 'text-[#0050b5]' : 'text-white hover:text-[#0050b5]'
                   }`}
                   onClick={() => setActiveDropdown(activeDropdown === 'application' ? null : 'application')}
                 >
@@ -571,7 +583,7 @@ export default function App() {
               background: 'rgba(3, 3, 3, 0.9)',
               pointerEvents: 'none',
               zIndex: 9,
-              opacity: activeSector ? 0 : 1,
+              opacity: (dimensions.width < 1200) ? 0 : (activeSector ? 0 : 1),
               transition: 'opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1)',
               maskImage: 'radial-gradient(circle 220px at -1000px -1000px, transparent 0%, black 100%)',
               WebkitMaskImage: 'radial-gradient(circle 220px at -1000px -1000px, transparent 0%, black 100%)',
@@ -609,8 +621,25 @@ export default function App() {
             {/* The transparent interactive particle core */}
             <ParticleCanvas 
               activeSector={activeSector}
-              onSectorHover={(sector) => setActiveSector(sector)}
-              onSectorClick={(sector) => setActiveDropdown(activeDropdown === sector ? null : sector)}
+              onSectorHover={(sector) => {
+                if (typeof window === 'undefined' || window.innerWidth >= 1200) {
+                  setActiveSector(sector);
+                }
+              }}
+              onSectorClick={(sector, clickedOnShape) => {
+                const isMobile = typeof window !== 'undefined' && window.innerWidth < 1200;
+                if (isMobile) {
+                  if (clickedOnShape && sector !== null) {
+                    setActiveSector(activeSector === sector ? null : sector);
+                  } else {
+                    setActiveSector(null);
+                  }
+                } else {
+                  if (sector !== null) {
+                    setActiveDropdown(activeDropdown === sector ? null : sector);
+                  }
+                }
+              }}
               particleDensity={particleDensity}
               dispersionStrength={dispersionStrength}
               restingSpread={restingSpread}
@@ -619,9 +648,9 @@ export default function App() {
 
           {/* 3. Unified Subtitles display in the bottom-left corner of the screen */}
           {activeSector && (
-            <div className="absolute bottom-16 left-12 z-30 pointer-events-none select-none max-w-lg">
+            <div className="absolute bottom-16 left-4 sm:left-6 md:left-8 xl:left-12 2xl:left-[240px] z-30 pointer-events-none select-none max-w-lg">
               <div className="select-none pointer-events-none transition-all duration-300">
-                <h1 className="text-3xl font-extrabold text-white tracking-wide transition-all duration-300">
+                <h1 className="text-3xl font-semibold text-white tracking-wide transition-all duration-300">
                   {SECTORS_DATA[activeSector].name}
                 </h1>
               </div>

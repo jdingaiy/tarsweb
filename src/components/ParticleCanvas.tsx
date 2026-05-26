@@ -41,8 +41,9 @@ interface Particle {
 
 interface ParticleCanvasProps {
   activeSector: SectorId | null;
+  activeVideo?: SectorId | null;
   onSectorHover: (sector: SectorId | null) => void;
-  onSectorClick: (sector: SectorId | null) => void;
+  onSectorClick: (sector: SectorId | null, clickedOnShape?: boolean) => void;
   particleDensity?: number;    // Customizable setting
   dispersionStrength?: number; // Customizable setting
   restingSpread?: number;      // Customizable setting
@@ -50,6 +51,7 @@ interface ParticleCanvasProps {
 
 export default function ParticleCanvas({
   activeSector,
+  activeVideo = null,
   onSectorHover,
   onSectorClick,
   particleDensity = 1.2,
@@ -151,8 +153,9 @@ export default function ParticleCanvas({
     const generatedParticles: Particle[] = [];
     const oData = outlineImgData.data;
 
-    // Scan outline data every step size based on density
-    const step = 1;
+    // Scan outline data every step size based on density (increased step on mobile to 2x for massive performance speedup)
+    const isMobileDevice = typeof window !== 'undefined' && window.innerWidth < 1200;
+    const step = isMobileDevice ? 2 : 1;
 
     for (let y = 0; y < logoHeight; y += step) {
       for (let x = 0; x < logoWidth; x += step) {
@@ -179,7 +182,7 @@ export default function ParticleCanvas({
               fy = randPoint.y;
             }
 
-            const numOutlineParticles = 3; // Increased to 3 for higher particle density
+            const numOutlineParticles = isMobileDevice ? 2 : 4; // Reduced to 2 on mobile for performance
             for (let i = 0; i < numOutlineParticles; i++) {
               // Stratified spread spectrum: many particles are tightly anchored to the outline,
               // while some fly out super-far to form a beautiful dramatic halo/aura of cosmic stardust
@@ -190,36 +193,40 @@ export default function ParticleCanvas({
               let pSize = 0;
               let pBaseAlpha = 0;
 
-              if (randSpread < 0.50) {
-                // Core: tightly bound to the outline to form the sharp main shape
+              if (randSpread < 0.62) {
+                // Core: slightly wider spread to disperse the bright main shape (now 62% ratio)
                 dispersionCategory = 'core';
-                individualSpread = restingSpread * 2.20; // wider core belt for fluffy stardust outline (was 1.10)
-                pScatterAmp = 0.60 + Math.random() * 0.60; // organic drift (was 0.28)
-                pBaseAlpha = 0.45 + Math.random() * 0.25; // bright core (increased)
+                individualSpread = restingSpread * 1.45; // dispersed core belt for softer outline
+                pScatterAmp = 0.60 + Math.random() * 0.50; // slightly higher organic drift to disperse brightness
+                pBaseAlpha = 0.49 + Math.random() * 0.26; // denser core (lowered by 5% from 0.52+0.28 to 0.49+0.26)
                 
                 const randVal = Math.random();
                 pSize = 0.16 + randVal * 0.16; // smaller core particles (0.16 to 0.32)
                 if (randVal > 0.85) {
                   pSize = 0.32 + Math.random() * 0.15; // smaller accent core particles (0.32 to 0.47)
                 }
-              } else if (randSpread < 0.85) {
-                // Cloud: moderately dispersed mist around the core
+              } else if (randSpread < 0.90) {
+                // Cloud: moderately dispersed mist around the core (28% ratio)
                 dispersionCategory = 'cloud';
-                individualSpread = restingSpread * 3.60; // wider moderate spread (was 2.50)
-                pScatterAmp = 1.20 + Math.random() * 1.00; // active breathing sparkle (was 0.85)
-                pBaseAlpha = 0.18 + Math.random() * 0.18; // misty stardust (reduced from 0.25)
+                individualSpread = restingSpread * 3.00; // tighter cloud spread for concentrated stardust halo near outline
+                pScatterAmp = 1.40 + Math.random() * 1.10; // active breathing sparkle
+                
+                const isBrightFloater = Math.random() < 0.22; // 22% of cloud particles are bright gems
+                pBaseAlpha = isBrightFloater ? (0.68 + Math.random() * 0.22) : (0.42 + Math.random() * 0.23); // brighter cloud background (avg 0.53) for decay
                 
                 const randVal = Math.random();
-                pSize = 0.12 + randVal * 0.14; // smaller cloud particles (0.12 to 0.26)
+                pSize = isBrightFloater ? (0.24 + randVal * 0.18) : (0.12 + randVal * 0.14); // slightly larger if bright
               } else {
-                // Aura: highly dispersed outer cosmic dust
+                // Aura: highly dispersed outer cosmic dust (now 10% ratio for clean, sparse look)
                 dispersionCategory = 'aura';
-                individualSpread = restingSpread * 5.50; // wider outer spread (was 4.50)
-                pScatterAmp = 2.00 + Math.random() * 1.80; // floating freely (was 1.60)
-                pBaseAlpha = 0.08 + Math.random() * 0.10; // very faint outer stardust (reduced from 0.12)
+                individualSpread = restingSpread * 3.20; // pulled in outer spread further to prevent edge pixel bleed
+                pScatterAmp = 1.80 + Math.random() * 1.20; // floating freely (slightly tighter breathing)
+                
+                const isBrightFloater = Math.random() < 0.18; // 18% of aura particles are bright gems
+                pBaseAlpha = isBrightFloater ? (0.58 + Math.random() * 0.22) : (0.16 + Math.random() * 0.16); // brighter aura background (avg 0.24)
                 
                 const randVal = Math.random();
-                pSize = 0.08 + randVal * 0.10; // smaller aura particles (0.08 to 0.18)
+                pSize = isBrightFloater ? (0.20 + randVal * 0.15) : (0.08 + randVal * 0.10);
               }
 
               const jitterX = (Math.random() - 0.5) * individualSpread;
@@ -267,7 +274,7 @@ export default function ParticleCanvas({
       
       // Control sparse density of background fill-points using particleDensity
       // We will randomly sample coordinates from the pool database to completely avoid regular lines or checkerboard grids
-      const fillRatio = 0.45 * particleDensity; // Increased to 0.45 to support denser hover state
+      const fillRatio = 0.45 * particleDensity * (isMobileDevice ? 0.20 : 1.0); // 80% fewer fill particles on mobile
       const targetCount = Math.floor(pool.length * fillRatio);
       
       for (let k = 0; k < targetCount; k++) {
@@ -368,9 +375,10 @@ export default function ParticleCanvas({
       const logoScreenX = (dimensions.width / 2) - (logoWidth / 2) * scale;
       const logoScreenY = (dimensions.height / 2) - (logoHeight / 2) * scale - 10;
 
-      // Detect hovered sector based on mouse position relative to path geometries
+      // Detect hovered sector based on mouse position relative to path geometries (disabled on mobile)
       let hoveredSector: SectorId | null = null;
-      if (mouseRef.current.x >= -500 && mouseRef.current.y >= -500) {
+      const isMobile = typeof window !== 'undefined' && window.innerWidth < 1200;
+      if (!isMobile && mouseRef.current.x >= -500 && mouseRef.current.y >= -500) {
         const localX = (mouseRef.current.x - logoScreenX) / scale;
         const localY = (mouseRef.current.y - logoScreenY) / scale;
 
@@ -401,7 +409,7 @@ export default function ParticleCanvas({
 
         // Draw transition targets interpolation outline (0) -> fill (1) with independent organic casing speed
         const ratioTarget = isThisGroupActive ? 1.0 : 0.0;
-        p.currentRatio += (ratioTarget - p.currentRatio) * (isThisGroupActive ? 0.42 : 0.26);
+        p.currentRatio += (ratioTarget - p.currentRatio) * (isThisGroupActive ? 0.42 : 0.45); // faster return (was 0.26)
 
         // Model physical depth Z for Depth Of Field (Frosted glass effect)
         // Defocus from 80 down to 24 units ensures inactive sectors remain beautifully legible
@@ -409,7 +417,7 @@ export default function ParticleCanvas({
           ? 0 
           : (activeGroup !== null ? 24 : Math.sin(t * 1.5 + p.noiseSeed * 0.1) * 12);
         
-        p.z += (targetZ - p.z) * 0.08;
+        p.z += (targetZ - p.z) * 0.15; // faster return (was 0.08)
 
         // Calculate dynamic logical targets
         const txNative = p.ox * (1 - p.currentRatio) + p.fx * p.currentRatio;
@@ -444,7 +452,7 @@ export default function ParticleCanvas({
         }
 
         // Smoothly ease target position over time with independent, randomized decay speeds (destroys rigid 1-to-1 sync)
-        const easeRate = isThisGroupActive ? 0.45 : 0.28;
+        const easeRate = isThisGroupActive ? 0.45 : 0.48; // faster return (was 0.28)
         p.x += (targetX - p.x) * easeRate;
         p.y += (targetY - p.y) * easeRate;
 
@@ -453,7 +461,7 @@ export default function ParticleCanvas({
         p.vy = 0;
 
         // Update linear alpha transition step
-        p.alpha += (p.baseAlpha - p.alpha) * 0.1;
+        p.alpha += (p.baseAlpha - p.alpha) * 0.22; // faster return (was 0.10)
       });
 
       // 3. Third Pass: Draw particles.
@@ -482,32 +490,49 @@ export default function ParticleCanvas({
 
           // Individualized organic drift: each particle undergoes slow, randomized hover wave motions
           // using its own distinct frequencies, speeds and phases to ensure no coordinated global movement
-          const driftX = Math.sin(t * p.breathSpeed + p.breathOffset) * p.scatterAmp * 2.6 * (1.0 - p.currentRatio);
-          const driftY = Math.cos(t * (p.breathSpeed * 1.1) + p.breathOffset * 1.45) * p.scatterAmp * 2.6 * (1.0 - p.currentRatio);
+          const driftX = Math.sin(t * p.breathSpeed + p.breathOffset) * p.scatterAmp * 1.8 * (1.0 - p.currentRatio);
+          const driftY = Math.cos(t * (p.breathSpeed * 1.1) + p.breathOffset * 1.45) * p.scatterAmp * 1.8 * (1.0 - p.currentRatio);
           
           // Micro-vibrations for natural cosmic stardust sparkle
-          const jitterX = Math.sin(t * 4.2 + p.noiseSeed) * p.scatterAmp * 0.8 * (1.0 - p.currentRatio);
-          const jitterY = Math.cos(t * 3.6 + p.noiseSeed * 1.25) * p.scatterAmp * 0.8 * (1.0 - p.currentRatio);
+          const jitterX = Math.sin(t * 4.2 + p.noiseSeed) * p.scatterAmp * 0.5 * (1.0 - p.currentRatio);
+          const jitterY = Math.cos(t * 3.6 + p.noiseSeed * 1.25) * p.scatterAmp * 0.5 * (1.0 - p.currentRatio);
 
           const drawX = p.x + driftX + jitterX;
           const drawY = p.y + driftY + jitterY;
 
+          // Deterministic color & sparkle based on noiseSeed
+          const seedMod = (p.noiseSeed * 1000) % 100;
+          let colorStr = '255, 255, 255';
+          if (seedMod < 16) {
+            colorStr = '255, 238, 195'; // Soft golden cream
+          } else if (seedMod < 32) {
+            colorStr = '215, 240, 255'; // Soft cool blue
+          }
+
+          const isSparkle = (p.noiseSeed * 10) % 10 < 2.8; // more sparkles (was 1.5)
+          const sparkleSizeMult = isSparkle ? (1.3 + (p.noiseSeed % 0.5) * 1.2) : 1.0;
+          const sparkleAlphaMult = isSparkle ? 1.6 : 1.0;
+
           let finalDrawSize = p.size * 0.95 + totalBlurRadius * 0.25;
+          finalDrawSize *= sparkleSizeMult;
           // Subtle individual size breathing fluctuation (feels sparkled, not global)
           finalDrawSize *= (1.0 + Math.sin(t * 2.5 + p.noiseSeed) * 0.12 * (1.0 - p.currentRatio));
 
           // Make the inactive parts of the logo significantly dimmer in hover state
           let finalDrawAlpha = (p.alpha * sizeBrightnessMult * 0.04) / (1.0 + totalBlurRadius * 0.3); 
+          finalDrawAlpha *= sparkleAlphaMult;
 
           if (finalDrawAlpha > 0.005) {
-            // Draw soft glow/bloom halo (subtle and tight)
-            ctx.fillStyle = `rgba(255, 255, 255, ${finalDrawAlpha * 0.12})`;
-            ctx.beginPath();
-            ctx.arc(drawX, drawY, finalDrawSize * 1.8, 0, Math.PI * 2);
-            ctx.fill();
+            // Draw soft glow/bloom halo (subtle and tight) - skipped on mobile for performance
+            if (!isMobile) {
+              ctx.fillStyle = `rgba(${colorStr}, ${finalDrawAlpha * 0.12})`;
+              ctx.beginPath();
+              ctx.arc(drawX, drawY, finalDrawSize * 1.8, 0, Math.PI * 2);
+              ctx.fill();
+            }
 
             // Draw crisp particle core
-            ctx.fillStyle = `rgba(255, 255, 255, ${finalDrawAlpha * 0.95})`;
+            ctx.fillStyle = `rgba(${colorStr}, ${finalDrawAlpha * 0.95})`;
             ctx.beginPath();
             ctx.arc(drawX, drawY, finalDrawSize, 0, Math.PI * 2);
             ctx.fill();
@@ -527,6 +552,19 @@ export default function ParticleCanvas({
           const physicalDepthBlur = Math.abs(p.z) * 0.08;
           const totalBlurRadius = (physicalDepthBlur + 1.2) * sizeBlurMult;
 
+          // Deterministic color & sparkle based on noiseSeed
+          const seedMod = (p.noiseSeed * 1000) % 100;
+          let colorStr = '255, 255, 255';
+          if (seedMod < 16) {
+            colorStr = '255, 238, 195'; // Soft golden cream
+          } else if (seedMod < 32) {
+            colorStr = '215, 240, 255'; // Soft cool blue
+          }
+
+          const isSparkle = (p.noiseSeed * 10) % 10 < 2.8; // more sparkles (was 1.5)
+          const sparkleSizeMult = isSparkle ? (1.3 + (p.noiseSeed % 0.5) * 1.2) : 1.0;
+          const sparkleAlphaMult = isSparkle ? 1.6 : 1.0;
+
           let finalDrawSize = p.size * 0.95;
           let finalDrawAlpha = p.alpha * sizeBrightnessMult;
 
@@ -536,10 +574,10 @@ export default function ParticleCanvas({
           }
 
           // Active hover size and alpha boost
-          finalDrawSize = p.size * 2.5; // Larger size on hover to fill the shape densely and brightly
+          finalDrawSize = p.size * 2.5 * sparkleSizeMult; // Larger size on hover to fill the shape densely and brightly
           finalDrawSize *= (1.06 + Math.sin(t * 12 + p.noiseSeed) * 0.12);
-          // Boosted active alpha multiplier (from 4.2 to 6.5) to make active hovered sections extremely bright and dense
-          finalDrawAlpha = Math.min(1.0, finalDrawAlpha * 6.5);
+          // Boosted active alpha multiplier
+          finalDrawAlpha = Math.min(1.0, finalDrawAlpha * 6.5 * sparkleAlphaMult);
 
           // Mouse searchlight ambient particle illumination (Only for active hovered sector)
           if (mouseRef.current.x >= 0 && mouseRef.current.y >= 0) {
@@ -552,14 +590,16 @@ export default function ParticleCanvas({
           }
 
           if (finalDrawAlpha > 0.005) {
-            // Draw soft glow/bloom halo (slightly wider and brighter)
-            ctx.fillStyle = `rgba(255, 255, 255, ${finalDrawAlpha * 0.28})`;
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, finalDrawSize * 2.2, 0, Math.PI * 2);
-            ctx.fill();
+            // Draw soft glow/bloom halo (slightly wider and brighter) - skipped on mobile for performance
+            if (!isMobile) {
+              ctx.fillStyle = `rgba(${colorStr}, ${finalDrawAlpha * 0.28})`;
+              ctx.beginPath();
+              ctx.arc(p.x, p.y, finalDrawSize * 2.2, 0, Math.PI * 2);
+              ctx.fill();
+            }
 
             // Draw crisp particle core (fully bright white)
-            ctx.fillStyle = `rgba(255, 255, 255, ${finalDrawAlpha * 1.0})`;
+            ctx.fillStyle = `rgba(${colorStr}, ${finalDrawAlpha * 1.0})`;
             ctx.beginPath();
             ctx.arc(p.x, p.y, finalDrawSize, 0, Math.PI * 2);
             ctx.fill();
@@ -581,25 +621,29 @@ export default function ParticleCanvas({
           const physicalDepthBlur = Math.abs(p.z) * 0.08;
           const totalBlurRadius = (physicalDepthBlur + 1.2) * sizeBlurMult;
 
+          // Exaggerate drift and sparkle scale based on category to make outer particles float widely and wildly
+          const driftScale = (p.isFillOnly ? 12.0 : (p.dispersionCategory === 'core' ? 18.0 : (p.dispersionCategory === 'cloud' ? 22.0 : 24.0)));
+          const jitterScale = (p.isFillOnly ? 4.0 : (p.dispersionCategory === 'core' ? 7.5 : (p.dispersionCategory === 'cloud' ? 9.0 : 9.0)));
+
           // Double-harmonic drift pattern for richer, pseudo-random chaotic paths
           const driftX = (
             Math.sin(t * (p.breathSpeed * 2.5) + p.breathOffset) * 0.70 +
             Math.sin(t * (p.breathSpeed * 4.9) + p.noiseSeed) * 0.30
-          ) * p.scatterAmp * 12.5;
+          ) * p.scatterAmp * driftScale;
           const driftY = (
             Math.cos(t * (p.breathSpeed * 2.7) + p.breathOffset * 1.45) * 0.70 +
             Math.cos(t * (p.breathSpeed * 3.8) + p.noiseSeed * 1.6) * 0.30
-          ) * p.scatterAmp * 12.5;
+          ) * p.scatterAmp * driftScale;
           
           // Double-harmonic micro-vibrations for atmospheric scintillation (twinkling)
           const jitterX = (
             Math.sin(t * 11.5 + p.noiseSeed) * 0.75 +
             Math.sin(t * 19.3 - p.breathOffset) * 0.25
-          ) * p.scatterAmp * 4.5;
+          ) * p.scatterAmp * jitterScale;
           const jitterY = (
             Math.cos(t * 10.0 + p.noiseSeed * 1.25) * 0.75 +
             Math.cos(t * 17.1 + p.breathOffset * 0.8) * 0.25
-          ) * p.scatterAmp * 4.5;
+          ) * p.scatterAmp * jitterScale;
 
           const drawX = p.x + driftX + jitterX;
           const drawY = p.y + driftY + jitterY;
@@ -621,7 +665,7 @@ export default function ParticleCanvas({
           const displacement = Math.sqrt(totalDx * totalDx + totalDy * totalDy);
           
           // Define a soft decay radius based on the particle's category and scale
-          const decayRadius = (p.isFillOnly ? 20.0 : (p.dispersionCategory === 'core' ? 24.0 : (p.dispersionCategory === 'cloud' ? 48.0 : 80.0))) * scale;
+          const decayRadius = (p.isFillOnly ? 16.0 : (p.dispersionCategory === 'core' ? 26.0 : (p.dispersionCategory === 'cloud' ? 58.0 : 40.0))) * scale;
           
           let fadeFactor = 1.0;
           if (decayRadius > 0.1) {
@@ -630,24 +674,38 @@ export default function ParticleCanvas({
             fadeFactor = Math.cos(ratio * Math.PI / 2);
           }
 
+          // Deterministic color & sparkle based on noiseSeed
+          const seedMod = (p.noiseSeed * 1000) % 100;
+          let colorStr = '255, 255, 255';
+          if (seedMod < 16) {
+            colorStr = '255, 238, 195'; // Soft golden cream
+          } else if (seedMod < 32) {
+            colorStr = '215, 240, 255'; // Soft cool blue
+          }
+
+          const isSparkle = (p.noiseSeed * 10) % 10 < 2.8; // more sparkles (was 1.5)
+          const sparkleSizeMult = isSparkle ? (1.3 + (p.noiseSeed % 0.5) * 1.2) : 1.0;
+          const sparkleAlphaMult = isSparkle ? 1.6 : 1.0;
+
           // Dynamically scale particle size based on fadeFactor:
           // Core (brighter parts) is bolded up to 1.90x, drifting parts shrink down to 0.65x
           const sizeMultiplier = 0.65 + 1.25 * Math.pow(fadeFactor, 1.5);
-          let finalDrawSize = p.size * sizeMultiplier;
+          let finalDrawSize = p.size * sizeMultiplier * sparkleSizeMult;
           
           // Subtle individual size breathing fluctuation (feels sparkled, not global)
           finalDrawSize *= (1.0 + Math.sin(t * 2.5 + p.noiseSeed) * 0.12);
 
-          // High contrast core (scaled up to 3.80x base) that fades non-linearly to create a sharp bright center and dim outer glow
-          let finalDrawAlpha = Math.min(1.0, p.alpha * sizeBrightnessMult * 3.80 * Math.pow(fadeFactor, 1.80)); 
+          // High contrast core (scaled up to 3.42x base) that fades non-linearly to create a sharp bright center and dim outer glow (lowered 5% from 3.60)
+          const exponent = p.dispersionCategory === 'core' ? 1.45 : (p.dispersionCategory === 'cloud' ? 1.20 : 1.80);
+          let finalDrawAlpha = Math.min(1.0, p.alpha * sizeBrightnessMult * 3.42 * Math.pow(fadeFactor, exponent) * sparkleAlphaMult); 
 
           if (totalBlurRadius > 0.4) {
             finalDrawSize = finalDrawSize + totalBlurRadius * 0.22;
             finalDrawAlpha = finalDrawAlpha / (1.0 + totalBlurRadius * 0.30);
           }
 
-          // Mouse searchlight ambient particle illumination (Resting mode only)
-          if (mouseRef.current.x >= 0 && mouseRef.current.y >= 0) {
+          // Mouse searchlight ambient particle illumination (Resting mode only - skipped for fill particles)
+          if (!p.isFillOnly && mouseRef.current.x >= 0 && mouseRef.current.y >= 0) {
             const mdx = mouseRef.current.x - drawX;
             const mdy = mouseRef.current.y - drawY;
             const mdist = Math.sqrt(mdx * mdx + mdy * mdy);
@@ -657,19 +715,21 @@ export default function ParticleCanvas({
           }
 
           if (scanGlow > 0.01) {
-            finalDrawSize *= (1.0 + scanGlow * 0.08);
+            // Metallic sheen sweep does not change particle size to avoid visual thickening
             finalDrawAlpha = Math.min(1.0, finalDrawAlpha + scanGlow * 0.7);
           }
 
           if (finalDrawAlpha > 0.005) {
-            // Draw soft glow/bloom halo (subtle and tight)
-            ctx.fillStyle = `rgba(255, 255, 255, ${finalDrawAlpha * 0.12})`;
-            ctx.beginPath();
-            ctx.arc(drawX, drawY, finalDrawSize * 1.8, 0, Math.PI * 2);
-            ctx.fill();
+            // Draw soft glow/bloom halo (subtle and tight) - skipped on mobile for performance
+            if (!isMobile) {
+              ctx.fillStyle = `rgba(${colorStr}, ${finalDrawAlpha * 0.12})`;
+              ctx.beginPath();
+              ctx.arc(drawX, drawY, finalDrawSize * 1.8, 0, Math.PI * 2);
+              ctx.fill();
+            }
 
             // Draw crisp particle core
-            ctx.fillStyle = `rgba(255, 255, 255, ${finalDrawAlpha * 0.95})`;
+            ctx.fillStyle = `rgba(${colorStr}, ${finalDrawAlpha * 0.95})`;
             ctx.beginPath();
             ctx.arc(drawX, drawY, finalDrawSize, 0, Math.PI * 2);
             ctx.fill();
@@ -744,11 +804,54 @@ export default function ParticleCanvas({
     };
   }, [dimensions]);
 
-  const handleCanvasClick = () => {
-    if (lastHoveredSectorRef.current) {
-      onSectorClick(lastHoveredSectorRef.current);
+  const handleCanvasClick = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const rect = canvas.getBoundingClientRect();
+    if (rect.width === 0 || rect.height === 0) return;
+
+    // Compensate for CSS transform scale factor to map coordinates to internal resolution
+    const clickX = ((e.clientX - rect.left) / rect.width) * dimensions.width;
+    const clickY = ((e.clientY - rect.top) / rect.height) * dimensions.height;
+
+    const scale = scaleRef.current;
+    const logoScreenX = (dimensions.width / 2) - (logoWidth / 2) * scale;
+    const logoScreenY = (dimensions.height / 2) - (logoHeight / 2) * scale - 10;
+    const localX = (clickX - logoScreenX) / scale;
+    const localY = (clickY - logoScreenY) / scale;
+
+    let clickedSector: SectorId | null = null;
+    const ctx = canvas.getContext('2d');
+    if (ctx) {
+      ctx.save();
+      ctx.setTransform(1, 0, 0, 1, 0, 0); // reset context transform
+      if (ctx.isPointInPath(pathAlgorithm, localX, localY)) {
+        clickedSector = 'algorithm';
+      } else if (ctx.isPointInPath(pathOntology, localX, localY)) {
+        clickedSector = 'ontology';
+      } else if (ctx.isPointInPath(pathApplication, localX, localY)) {
+        clickedSector = 'application';
+      }
+      ctx.restore();
+    }
+
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 1200;
+    if (isMobile) {
+      if (clickedSector) {
+        onSectorClick(clickedSector, true);
+      } else {
+        // Clicking outside the logo shapes has no interaction in resting state, and only deactivates active states
+        if (activeSector !== null || activeVideo !== null) {
+          onSectorClick(null, false);
+        }
+      }
     } else {
-      onSectorClick(null);
+      if (clickedSector) {
+        onSectorClick(clickedSector, true);
+      } else {
+        onSectorClick(null, false);
+      }
     }
   };
 

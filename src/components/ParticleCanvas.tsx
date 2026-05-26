@@ -597,20 +597,26 @@ export default function ParticleCanvas({
             scanGlow = Math.pow(Math.cos((distToScan / 90) * Math.PI / 2), 4.0) * 1.8;
           }
 
-          let finalDrawSize = p.size * 0.95;
-          // Subtle individual size breathing fluctuation (feels sparkled, not global)
-          finalDrawSize *= (1.0 + Math.sin(t * 2.5 + p.noiseSeed) * 0.12);
-
-          // Calculate displacement from outline to smoothly fade brightness as particles drift
+          // Calculate displacement from outline to smoothly fade brightness and size as particles drift
           const displacement = Math.sqrt(driftX * driftX + driftY * driftY);
           const maxDrift = p.scatterAmp * 12.5;
           let fadeFactor = 1.0;
           if (maxDrift > 0.1) {
             const ratio = Math.min(1.0, displacement / maxDrift);
-            fadeFactor = 1.0 - ratio * 0.72; // fade down to 28% brightness at max drift
+            // Cosine transition: starts at 1.0 (core), drops continuously and smoothly to 0.20 (outer edge)
+            fadeFactor = 0.20 + 0.80 * Math.cos(ratio * Math.PI / 2);
           }
 
-          let finalDrawAlpha = p.alpha * sizeBrightnessMult * 0.75 * fadeFactor; 
+          // Dynamically scale particle size based on fadeFactor:
+          // Core (brighter parts) is bolded up to 1.45x, drifting parts shrink down to 0.75x
+          const sizeMultiplier = 0.75 + (fadeFactor - 0.20) * (0.70 / 0.80);
+          let finalDrawSize = p.size * sizeMultiplier;
+          
+          // Subtle individual size breathing fluctuation (feels sparkled, not global)
+          finalDrawSize *= (1.0 + Math.sin(t * 2.5 + p.noiseSeed) * 0.12);
+
+          // Highly bright core (1.35x base) that fades smoothly to dim outer stardust
+          let finalDrawAlpha = p.alpha * sizeBrightnessMult * 1.35 * fadeFactor; 
 
           if (totalBlurRadius > 0.4) {
             finalDrawSize = finalDrawSize + totalBlurRadius * 0.22;

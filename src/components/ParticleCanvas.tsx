@@ -603,20 +603,20 @@ export default function ParticleCanvas({
           let fadeFactor = 1.0;
           if (maxDrift > 0.1) {
             const ratio = Math.min(1.0, displacement / maxDrift);
-            // Cosine transition: starts at 1.0 (core), drops continuously and smoothly to 0.20 (outer edge)
-            fadeFactor = 0.20 + 0.80 * Math.cos(ratio * Math.PI / 2);
+            // Cosine transition: starts at 1.0 (core), drops continuously and smoothly to 0.00 (outer edge)
+            fadeFactor = Math.cos(ratio * Math.PI / 2);
           }
 
           // Dynamically scale particle size based on fadeFactor:
-          // Core (brighter parts) is bolded up to 1.45x, drifting parts shrink down to 0.75x
-          const sizeMultiplier = 0.75 + (fadeFactor - 0.20) * (0.70 / 0.80);
+          // Core (brighter parts) is bolded up to 1.90x, drifting parts shrink down to 0.65x
+          const sizeMultiplier = 0.65 + 1.25 * Math.pow(fadeFactor, 1.5);
           let finalDrawSize = p.size * sizeMultiplier;
           
           // Subtle individual size breathing fluctuation (feels sparkled, not global)
           finalDrawSize *= (1.0 + Math.sin(t * 2.5 + p.noiseSeed) * 0.12);
 
-          // Highly bright core (1.35x base) that fades smoothly to dim outer stardust
-          let finalDrawAlpha = p.alpha * sizeBrightnessMult * 1.35 * fadeFactor; 
+          // Highly bright core (scaled up to 6.00x base) that fades smoothly to dim outer stardust
+          let finalDrawAlpha = Math.min(1.0, p.alpha * sizeBrightnessMult * 6.00 * Math.pow(fadeFactor, 2.0)); 
 
           if (totalBlurRadius > 0.4) {
             finalDrawSize = finalDrawSize + totalBlurRadius * 0.22;

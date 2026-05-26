@@ -320,7 +320,7 @@ export default function App() {
               >
                 <button 
                   type="button" 
-                  className={`header-btn-algorithm inline-flex shrink-0 items-center rounded-[2px] px-3 py-1 text-[14px] font-medium leading-5 whitespace-nowrap transition-colors touch-manipulation focus-visible:outline-none cursor-pointer ${
+                  className={`header-btn-algorithm inline-flex shrink-0 items-center rounded-[2px] px-3 py-1 text-[14px] font-normal leading-5 whitespace-nowrap transition-colors touch-manipulation focus-visible:outline-none cursor-pointer ${
                     activeDropdown === 'algorithm' ? 'text-[#0050b5]' : 'text-white hover:text-[#0050b5]'
                   }`}
                   onClick={() => setActiveDropdown(activeDropdown === 'algorithm' ? null : 'algorithm')}
@@ -338,7 +338,7 @@ export default function App() {
                         rel="noopener noreferrer"
                         className="group/item block p-4 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/5 transition-all duration-200"
                       >
-                        <div className="font-medium text-[14px] text-white group-hover/item:text-[#0050b5] transition-colors">AWE 3.5 AI世界引擎</div>
+                        <div className="font-normal text-[14px] text-white group-hover/item:text-[#0050b5] transition-colors">AWE 3.5 AI世界引擎</div>
                         <div className="text-[12px] text-gray-400 mt-1">自研多模态人工智能模型，为具身智能机器人赋予强大脑力。</div>
                       </a>
                       <a 
@@ -347,7 +347,7 @@ export default function App() {
                         rel="noopener noreferrer"
                         className="group/item block p-4 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/5 transition-all duration-200"
                       >
-                        <div className="font-medium text-[14px] text-white group-hover/item:text-[#0050b5] transition-colors">WIYH 数据集</div>
+                        <div className="font-normal text-[14px] text-white group-hover/item:text-[#0050b5] transition-colors">WIYH 数据集</div>
                         <div className="text-[12px] text-gray-400 mt-1">包含大量关节轨迹与触觉数据的离线数据集，打通训练闭环。</div>
                       </a>
                       <a 
@@ -356,7 +356,7 @@ export default function App() {
                         rel="noopener noreferrer"
                         className="group/item block p-4 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/5 transition-all duration-200"
                       >
-                        <div className="font-medium text-[14px] text-white group-hover/item:text-[#0050b5] transition-colors">SenseHub</div>
+                        <div className="font-normal text-[14px] text-white group-hover/item:text-[#0050b5] transition-colors">SenseHub</div>
                         <div className="text-[12px] text-gray-400 mt-1">高精度视触觉多模态传感器系统，赋予细腻物理接触理解。</div>
                       </a>
                     </div>
@@ -371,7 +371,7 @@ export default function App() {
               >
                 <button 
                   type="button" 
-                  className={`header-btn-ontology inline-flex shrink-0 items-center rounded-[2px] px-3 py-1 text-[14px] font-medium leading-5 whitespace-nowrap transition-colors touch-manipulation focus-visible:outline-none cursor-pointer ${
+                  className={`header-btn-ontology inline-flex shrink-0 items-center rounded-[2px] px-3 py-1 text-[14px] font-normal leading-5 whitespace-nowrap transition-colors touch-manipulation focus-visible:outline-none cursor-pointer ${
                     activeDropdown === 'ontology' ? 'text-[#0050b5]' : 'text-white hover:text-[#0050b5]'
                   }`}
                   onClick={() => setActiveDropdown(activeDropdown === 'ontology' ? null : 'ontology')}
@@ -388,7 +388,7 @@ export default function App() {
                         rel="noopener noreferrer"
                         className="group/item block p-4 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/5 transition-all duration-200"
                       >
-                        <div className="font-medium text-[14px] text-white group-hover/item:text-[#0050b5] transition-colors">A系列机器人</div>
+                        <div className="font-normal text-[14px] text-white group-hover/item:text-[#0050b5] transition-colors">A系列机器人</div>
                         <div className="text-[12px] text-gray-400 mt-1">全尺寸双足人形机器人，高自由度与卓越运动平衡。</div>
                       </a>
                       <a 
@@ -397,7 +397,7 @@ export default function App() {
                         rel="noopener noreferrer"
                         className="group/item block p-4 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/5 transition-all duration-200"
                       >
-                        <div className="font-medium text-[14px] text-white group-hover/item:text-[#0050b5] transition-colors">T系列机器人</div>
+                        <div className="font-normal text-[14px] text-white group-hover/item:text-[#0050b5] transition-colors">T系列机器人</div>
                         <div className="text-[12px] text-gray-400 mt-1">轮足式具身智能机器人，多地形快速移动与高效执行。</div>
                       </a>
                       <a 
@@ -406,7 +406,7 @@ export default function App() {
                         rel="noopener noreferrer"
                         className="group/item block p-4 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/5 transition-all duration-200"
                       >
-                        <div className="font-medium text-[14px] text-white group-hover/item:text-[#0050b5] transition-colors">Tars DexHand</div>
+                        <div className="font-normal text-[14px] text-white group-hover/item:text-[#0050b5] transition-colors">Tars DexHand</div>
                         <div className="text-[12px] text-gray-400 mt-1">仿生高自由度灵巧手，支持高精度触觉与精细手内操作。</div>
                       </a>
                       <a 
@@ -415,7 +415,7 @@ export default function App() {
                         rel="noopener noreferrer"
                         className="group/item block p-4 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/5 transition-all duration-200"
                       >
-                        <div className="font-medium text-[14px] text-white group-hover/item:text-[#0050b5] transition-colors">Tars Drive 灵巧关节</div>
+                        <div className="font-normal text-[14px] text-white group-hover/item:text-[#0050b5] transition-colors">Tars Drive 灵巧关节</div>
                         <div className="text-[12px] text-gray-400 mt-1">机器人专用高性能动力关节，大扭矩与高响应速度。</div>
                       </a>
                     </div>
@@ -430,7 +430,7 @@ export default function App() {
               >
                 <button 
                   type="button" 
-                  className={`header-btn-application inline-flex shrink-0 items-center rounded-[2px] px-3 py-1 text-[14px] font-medium leading-5 whitespace-nowrap transition-colors touch-manipulation focus-visible:outline-none cursor-pointer ${
+                  className={`header-btn-application inline-flex shrink-0 items-center rounded-[2px] px-3 py-1 text-[14px] font-normal leading-5 whitespace-nowrap transition-colors touch-manipulation focus-visible:outline-none cursor-pointer ${
                     activeDropdown === 'application' ? 'text-[#0050b5]' : 'text-white hover:text-[#0050b5]'
                   }`}
                   onClick={() => setActiveDropdown(activeDropdown === 'application' ? null : 'application')}
@@ -447,7 +447,7 @@ export default function App() {
                         rel="noopener noreferrer"
                         className="group/item block p-4 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/5 transition-all duration-200"
                       >
-                        <div className="font-medium text-[14px] text-white group-hover/item:text-[#0050b5] transition-colors">AWR</div>
+                        <div className="font-normal text-[14px] text-white group-hover/item:text-[#0050b5] transition-colors">AWR</div>
                         <div className="text-[12px] text-gray-400 mt-1">具身智能机器人应用系统，支持多行业定制化场景部署。</div>
                       </a>
                     </div>
@@ -460,7 +460,7 @@ export default function App() {
                 className="relative group py-4"
                 onMouseEnter={() => { if (activeDropdown) setActiveDropdown(null); }}
               >
-                <button type="button" className="inline-flex shrink-0 items-center rounded-[2px] px-3 py-1 text-[14px] font-medium leading-5 whitespace-nowrap transition-colors touch-manipulation focus-visible:outline-none text-white hover:text-[#0050b5] cursor-pointer">
+                <button type="button" className="inline-flex shrink-0 items-center rounded-[2px] px-3 py-1 text-[14px] font-normal leading-5 whitespace-nowrap transition-colors touch-manipulation focus-visible:outline-none text-white hover:text-[#0050b5] cursor-pointer">
                   <span>关于我们</span>
                 </button>
                 {/* Mega Menu Panel - Frosted Glassmorphism */}
@@ -473,7 +473,7 @@ export default function App() {
                         rel="noopener noreferrer"
                         className="group/item block p-4 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/5 transition-all duration-200"
                       >
-                        <div className="font-medium text-[14px] text-white group-hover/item:text-[#0050b5] transition-colors">公司介绍</div>
+                        <div className="font-normal text-[14px] text-white group-hover/item:text-[#0050b5] transition-colors">公司介绍</div>
                         <div className="text-[12px] text-gray-400 mt-1">了解 TARS 的核心使命、发展历程与团队风采。</div>
                       </a>
                       <a 
@@ -482,7 +482,7 @@ export default function App() {
                         rel="noopener noreferrer"
                         className="group/item block p-4 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/5 transition-all duration-200"
                       >
-                        <div className="font-medium text-[14px] text-white group-hover/item:text-[#0050b5] transition-colors">联系我们</div>
+                        <div className="font-normal text-[14px] text-white group-hover/item:text-[#0050b5] transition-colors">联系我们</div>
                         <div className="text-[12px] text-gray-400 mt-1">商业洽谈与技术合作通道，期待您的联络。</div>
                       </a>
                       <a 
@@ -491,7 +491,7 @@ export default function App() {
                         rel="noopener noreferrer"
                         className="group/item block p-4 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/5 transition-all duration-200"
                       >
-                        <div className="font-medium text-[14px] text-white group-hover/item:text-[#0050b5] transition-colors">加入我们</div>
+                        <div className="font-normal text-[14px] text-white group-hover/item:text-[#0050b5] transition-colors">加入我们</div>
                         <div className="text-[12px] text-gray-400 mt-1">诚邀科技与创新英才，共绘具身智能的美好蓝图。</div>
                       </a>
                     </div>
@@ -504,7 +504,7 @@ export default function App() {
                 href="https://www-dev.tars-ai.com/zh/news/" 
                 target="_blank" 
                 rel="noopener noreferrer" 
-                className="inline-flex shrink-0 items-center rounded-[2px] px-3 py-1 text-[14px] font-medium leading-5 whitespace-nowrap transition-colors touch-manipulation focus-visible:outline-none text-white hover:text-[#0050b5] cursor-pointer"
+                className="inline-flex shrink-0 items-center rounded-[2px] px-3 py-1 text-[14px] font-normal leading-5 whitespace-nowrap transition-colors touch-manipulation focus-visible:outline-none text-white hover:text-[#0050b5] cursor-pointer"
                 onMouseEnter={() => { if (activeDropdown) setActiveDropdown(null); }}
               >
                 新闻中心
@@ -666,7 +666,7 @@ export default function App() {
                     className="z-30 transition-all duration-300 select-none pointer-events-none"
                   >
                     <div className="text-left">
-                      <h1 className="text-3xl font-medium text-white tracking-wide mb-2">
+                      <h1 className="text-3xl font-normal text-white tracking-wide mb-2">
                         超级算法
                       </h1>
                       <div className="h-[1px] bg-white/40 w-full" />
@@ -686,7 +686,7 @@ export default function App() {
                     className="z-30 transition-all duration-300 select-none pointer-events-none"
                   >
                     <div className="text-right flex flex-col items-end">
-                      <h1 className="text-3xl font-medium text-white tracking-wide mb-2">
+                      <h1 className="text-3xl font-normal text-white tracking-wide mb-2">
                         超级本体
                       </h1>
                       <div className="h-[1px] bg-white/40 w-full" />
@@ -706,7 +706,7 @@ export default function App() {
                     className="z-30 transition-all duration-300 select-none pointer-events-none"
                   >
                     <div className="text-right flex flex-col items-end">
-                      <h1 className="text-3xl font-medium text-white tracking-wide mb-2">
+                      <h1 className="text-3xl font-normal text-white tracking-wide mb-2">
                         超级应用
                       </h1>
                       <div className="h-[1px] bg-white/40 w-full" />
@@ -718,7 +718,7 @@ export default function App() {
               {/* Mobile view (< 1200px) */}
               <div className="block min-[1200px]:hidden absolute bottom-16 left-0 right-0 z-30 pointer-events-none select-none px-6">
                 <div className="text-center">
-                  <h1 className="text-2xl font-medium text-white tracking-wide">
+                  <h1 className="text-2xl font-normal text-white tracking-wide">
                     {SECTORS_DATA[activeSector].name}
                   </h1>
                 </div>

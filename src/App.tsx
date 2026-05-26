@@ -568,7 +568,7 @@ export default function App() {
               height: '100%',
               backdropFilter: 'grayscale(100%)',
               WebkitBackdropFilter: 'grayscale(100%)',
-              background: 'rgba(3, 3, 3, 0.8)',
+              background: 'rgba(3, 3, 3, 0.9)',
               pointerEvents: 'none',
               zIndex: 9,
               opacity: activeSector ? 0 : 1,

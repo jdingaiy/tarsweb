@@ -705,7 +705,7 @@ export default function App() {
                     style={{
                       position: 'absolute',
                       left: `${algLayout.safeTextPadding}px`,
-                      top: `calc(50% - ${82 * currentLogoScale + 10}px)`,
+                      top: `calc(50% - ${82 * currentLogoScale}px)`,
                       width: `${algLayout.containerWidth}px`,
                       transform: 'translateY(-50%)',
                     }}
@@ -728,7 +728,7 @@ export default function App() {
                     style={{
                       position: 'absolute',
                       right: `${ontLayout.safeTextPadding}px`,
-                      top: `calc(50% - ${230 * currentLogoScale + 10}px)`,
+                      top: `calc(50% - ${230 * currentLogoScale}px)`,
                       width: `${ontLayout.containerWidth}px`,
                       transform: 'translateY(-50%)',
                     }}
@@ -751,7 +751,7 @@ export default function App() {
                     style={{
                       position: 'absolute',
                       right: `${appLayout.safeTextPadding}px`,
-                      top: `calc(50% + ${83.5 * currentLogoScale - 10}px)`,
+                      top: `calc(50% + ${83.5 * currentLogoScale}px)`,
                       width: `${appLayout.containerWidth}px`,
                       transform: 'translateY(-50%)',
                     }}
@@ -903,7 +903,7 @@ export default function App() {
 
 
       {/* Decorative Outer footer credits strictly minimal */}
-      <footer className="relative w-full py-4 text-center text-[10px] text-gray-600 font-mono border-t border-white/5 z-20">
+      <footer className="absolute bottom-0 left-0 w-full py-4 text-center text-[10px] text-gray-600 font-mono border-t border-white/5 z-20">
         AETHER QUANTUM CORE WORKSPACE © 2026. IMPLEMENTED FOR MULTI-DIMENSIONAL LOGO DISPERSION.
       </footer>
 

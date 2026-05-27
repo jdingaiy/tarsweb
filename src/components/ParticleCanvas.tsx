@@ -383,7 +383,7 @@ export default function ParticleCanvas({
       const activeGroup = activeSector;
       const scale = scaleRef.current;
       const logoScreenX = (dimensions.width / 2) - (logoWidth / 2) * scale;
-      const logoScreenY = (dimensions.height / 2) - (logoHeight / 2) * scale - 10;
+      const logoScreenY = (dimensions.height / 2) - (logoHeight / 2) * scale;
       const isTouch = interactionMode === 'touch';
 
       // Detect hovered sector based on mouse position relative to path geometries (disabled in touch mode)
@@ -829,7 +829,7 @@ export default function ParticleCanvas({
 
     const scale = scaleRef.current;
     const logoScreenX = (dimensions.width / 2) - (logoWidth / 2) * scale;
-    const logoScreenY = (dimensions.height / 2) - (logoHeight / 2) * scale - 10;
+    const logoScreenY = (dimensions.height / 2) - (logoHeight / 2) * scale;
     const localX = (clickX - logoScreenX) / scale;
     const localY = (clickY - logoScreenY) / scale;
 

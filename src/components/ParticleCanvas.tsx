@@ -337,7 +337,7 @@ export default function ParticleCanvas({
         const rect = canvasRef.current.parentElement.getBoundingClientRect();
         setDimensions({
           width: rect.width,
-          height: Math.max(560, rect.height),
+          height: rect.height,
         });
       }
     };

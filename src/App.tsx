@@ -258,7 +258,6 @@ export default function App() {
 
   const { scale: currentLogoScale, mode: interactionMode, device: currentDevice, boundaryPadding } = getLogoScaleAndConfig(dimensions.width, dimensions.height);
   console.log('App render debug:', { width: dimensions.width, height: dimensions.height, currentLogoScale, interactionMode, currentDevice, boundaryPadding });
-  const scaleFactor = currentLogoScale / 0.88;
 
   // Dynamic active title font size gradient for web endpoints
   const activeFontSize = (() => {
@@ -573,7 +572,7 @@ export default function App() {
       </header>
 
       {/* Main Interactive Screen Workspace */}
-      <main className="relative flex-1 w-full h-full min-h-[580px] overflow-hidden z-10">
+      <main className="relative flex-1 w-full h-full min-h-[350px] overflow-hidden z-10">
         
         {/* Full-screen absolute workspace */}
         <div className="absolute inset-0 w-full h-full">
@@ -665,15 +664,7 @@ export default function App() {
 
           {/* 2. FULL CANVAS BACKGROUND GRID COVER: Overlays the entire screen workspace */}
           <div 
-            style={{ 
-              position: 'absolute',
-              left: '0px',
-              top: '0px',
-              width: `${dimensions.width}px`,
-              height: `${dimensions.height}px`,
-              pointerEvents: 'auto'
-            }}
-            className="z-20"
+            className="absolute inset-0 w-full h-full z-20 pointer-events-auto"
           >
             {/* The transparent interactive particle core */}
             <ParticleCanvas 
@@ -714,7 +705,7 @@ export default function App() {
                     style={{
                       position: 'absolute',
                       left: `${algLayout.safeTextPadding}px`,
-                      top: `calc(50% - ${82 * currentLogoScale + 10 * scaleFactor}px)`,
+                      top: `calc(50% - ${82 * currentLogoScale + 10}px)`,
                       width: `${algLayout.containerWidth}px`,
                       transform: 'translateY(-50%)',
                     }}
@@ -737,7 +728,7 @@ export default function App() {
                     style={{
                       position: 'absolute',
                       right: `${ontLayout.safeTextPadding}px`,
-                      top: `calc(50% - ${230 * currentLogoScale + 10 * scaleFactor}px)`,
+                      top: `calc(50% - ${230 * currentLogoScale + 10}px)`,
                       width: `${ontLayout.containerWidth}px`,
                       transform: 'translateY(-50%)',
                     }}
@@ -760,7 +751,7 @@ export default function App() {
                     style={{
                       position: 'absolute',
                       right: `${appLayout.safeTextPadding}px`,
-                      top: `calc(50% + ${83.5 * currentLogoScale - 10 * scaleFactor}px)`,
+                      top: `calc(50% + ${83.5 * currentLogoScale - 10}px)`,
                       width: `${appLayout.containerWidth}px`,
                       transform: 'translateY(-50%)',
                     }}

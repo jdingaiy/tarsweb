@@ -176,8 +176,8 @@ export default function ParticleCanvas({
           else if (b > r && b > g) group = 'application';
 
           if (group) {
-            // Downsample the Algorithm outline by 50% in a checkerboard pattern to balance total particle count
-            if (group === 'algorithm' && (x + y) % 2 === 0) {
+            // Downsample the Algorithm outline by 50% in a checkerboard pattern to balance total particle count (only on desktop)
+            if (group === 'algorithm' && !isTouchDevice && (x + y) % 2 === 0) {
               continue;
             }
 
@@ -244,8 +244,14 @@ export default function ParticleCanvas({
               let finalAlpha = pBaseAlpha;
               let finalSize = pSize;
               if (group === 'algorithm') {
-                finalAlpha = Math.min(1.0, pBaseAlpha * 1.35); // 35% brighter to compensate for 50% downsampling
-                finalSize = pSize * 1.30; // 30% larger diameter
+                if (!isTouchDevice) {
+                  finalAlpha = Math.min(1.0, pBaseAlpha * 1.35); // 35% brighter to compensate for 50% downsampling on desktop
+                  finalSize = pSize * 1.30; // 30% larger diameter
+                } else {
+                  // On mobile touch devices, we don't downsample, so we don't need size/alpha compensation
+                  finalAlpha = pBaseAlpha;
+                  finalSize = pSize;
+                }
               }
 
               generatedParticles.push({
@@ -291,8 +297,8 @@ export default function ParticleCanvas({
       // Control sparse density of background fill-points using particleDensity
       // We will randomly sample coordinates from the pool database to completely avoid regular lines or checkerboard grids
       let fillRatio = 0.45 * particleDensity * (isTouchDevice ? 0.20 : 1.0); // 80% fewer fill particles on mobile/tablet
-      if (group === 'algorithm') {
-        fillRatio *= 0.50; // 50% fewer fill particles for algorithm to balance density
+      if (group === 'algorithm' && !isTouchDevice) {
+        fillRatio *= 0.50; // 50% fewer fill particles for algorithm to balance density on desktop
       }
       const targetCount = Math.floor(pool.length * fillRatio);
       
@@ -315,8 +321,14 @@ export default function ParticleCanvas({
         let finalAlpha = 0.02 + Math.random() * 0.03;
         let finalSize = pSize;
         if (group === 'algorithm') {
-          finalAlpha = Math.min(1.0, finalAlpha * 1.35); // 35% brighter to compensate for 50% downsampling
-          finalSize = pSize * 1.30; // 30% larger diameter
+          if (!isTouchDevice) {
+            finalAlpha = Math.min(1.0, finalAlpha * 1.35); // 35% brighter to compensate for 50% downsampling on desktop
+            finalSize = pSize * 1.30; // 30% larger diameter
+          } else {
+            // Keep normal on mobile since we don't downsample
+            finalAlpha = finalAlpha;
+            finalSize = pSize;
+          }
         }
 
         generatedParticles.push({

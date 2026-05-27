@@ -1,2 +1,2 @@
-  packages: ['.']
-  onlyBuiltDependencies: ['@google/genai', 'esbuild', 'protobufjs']
+packages: ['.']
+onlyBuiltDependencies: ['@google/genai', 'esbuild', 'protobufjs']

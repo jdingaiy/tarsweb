@@ -241,6 +241,13 @@ export default function ParticleCanvas({
               const jitterX = (Math.random() - 0.5) * individualSpread;
               const jitterY = (Math.random() - 0.5) * individualSpread;
 
+              let finalAlpha = pBaseAlpha;
+              let finalSize = pSize;
+              if (group === 'algorithm') {
+                finalAlpha = Math.min(1.0, pBaseAlpha * 1.35); // 35% brighter to compensate for 50% downsampling
+                finalSize = pSize * 1.30; // 30% larger diameter
+              }
+
               generatedParticles.push({
                 x: (dimensions.width / 2) + ((x + jitterX) - logoWidth / 2) * scaleRef.current,
                 y: (dimensions.height / 2) + ((y + jitterY) - logoHeight / 2) * scaleRef.current,
@@ -256,9 +263,9 @@ export default function ParticleCanvas({
                 currentRatio: 0.0, // default starts at outline (0)
                 destX: 0,
                 destY: 0,
-                baseAlpha: pBaseAlpha,
+                baseAlpha: finalAlpha,
                 alpha: 0,
-                size: pSize,
+                size: finalSize,
                 group,
                 noiseSeed: Math.random() * 200,
                 breathOffset: Math.random() * Math.PI * 2,
@@ -305,6 +312,13 @@ export default function ParticleCanvas({
           pSize = 0.08 + Math.random() * 0.08; // ultra-fine
         }
 
+        let finalAlpha = 0.02 + Math.random() * 0.03;
+        let finalSize = pSize;
+        if (group === 'algorithm') {
+          finalAlpha = Math.min(1.0, finalAlpha * 1.35); // 35% brighter to compensate for 50% downsampling
+          finalSize = pSize * 1.30; // 30% larger diameter
+        }
+
         generatedParticles.push({
           x: (dimensions.width / 2) + ((pt.x + jitterX) - logoWidth / 2) * scaleRef.current,
           y: (dimensions.height / 2) + ((pt.y + jitterY) - logoHeight / 2) * scaleRef.current,
@@ -321,9 +335,9 @@ export default function ParticleCanvas({
           currentRatio: 0.0, 
           destX: 0,
           destY: 0,
-          baseAlpha: 0.02 + Math.random() * 0.03, // Extremely faint resting state opacity to keep outline clean
+          baseAlpha: finalAlpha, // Extremely faint resting state opacity to keep outline clean
           alpha: 0,
-          size: pSize,
+          size: finalSize,
           group,
           noiseSeed: Math.random() * 200,
           breathOffset: Math.random() * Math.PI * 2,

@@ -354,6 +354,7 @@ export default function ParticleCanvas({
 
   // Sync scaled positions dynamically
   useEffect(() => {
+    console.log('ParticleCanvas sync logoScale prop:', logoScale);
     scaleRef.current = logoScale;
   }, [logoScale]);
 
@@ -367,6 +368,14 @@ export default function ParticleCanvas({
     const animate = () => {
       animationTimeRef.current += 0.005;
       const t = animationTimeRef.current;
+      if (t < 0.05) {
+        console.log('ParticleCanvas animate loop values:', {
+          scale: scaleRef.current,
+          width: dimensions.width,
+          height: dimensions.height,
+          activeSector
+        });
+      }
 
       // Clear the canvas
       ctx.clearRect(0, 0, dimensions.width, dimensions.height);
@@ -375,6 +384,7 @@ export default function ParticleCanvas({
       const scale = scaleRef.current;
       const logoScreenX = (dimensions.width / 2) - (logoWidth / 2) * scale;
       const logoScreenY = (dimensions.height / 2) - (logoHeight / 2) * scale - 10;
+      const isTouch = interactionMode === 'touch';
 
       // Detect hovered sector based on mouse position relative to path geometries (disabled in touch mode)
       let hoveredSector: SectorId | null = null;
@@ -526,7 +536,7 @@ export default function ParticleCanvas({
 
           if (finalDrawAlpha > 0.005) {
             // Draw soft glow/bloom halo (subtle and tight) - skipped on mobile for performance
-            if (!isMobile) {
+            if (!isTouch) {
               ctx.fillStyle = `rgba(${colorStr}, ${finalDrawAlpha * 0.12})`;
               ctx.beginPath();
               ctx.arc(drawX, drawY, finalDrawSize * 1.8, 0, Math.PI * 2);
@@ -593,7 +603,7 @@ export default function ParticleCanvas({
 
           if (finalDrawAlpha > 0.005) {
             // Draw soft glow/bloom halo (slightly wider and brighter) - skipped on mobile for performance
-            if (!isMobile) {
+            if (!isTouch) {
               ctx.fillStyle = `rgba(${colorStr}, ${finalDrawAlpha * 0.28})`;
               ctx.beginPath();
               ctx.arc(p.x, p.y, finalDrawSize * 2.2, 0, Math.PI * 2);
@@ -723,7 +733,7 @@ export default function ParticleCanvas({
 
           if (finalDrawAlpha > 0.005) {
             // Draw soft glow/bloom halo (subtle and tight) - skipped on mobile for performance
-            if (!isMobile) {
+            if (!isTouch) {
               ctx.fillStyle = `rgba(${colorStr}, ${finalDrawAlpha * 0.12})`;
               ctx.beginPath();
               ctx.arc(drawX, drawY, finalDrawSize * 1.8, 0, Math.PI * 2);

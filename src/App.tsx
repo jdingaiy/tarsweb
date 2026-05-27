@@ -389,7 +389,7 @@ export default function App() {
           </div>
 
           {/* Center Navigation Links with hover mega menus */}
-          <div className="hidden min-[1200px]:flex items-center justify-center flex-1 mx-8">
+          <div className="hidden min-[960px]:flex items-center justify-center flex-1 mx-8">
             <div className="flex max-w-full flex-nowrap items-center justify-center gap-4">
               
               {/* Menu Item 1: 超级算法 */}
@@ -593,7 +593,7 @@ export default function App() {
           </div>
 
           {/* Right Spacer of equal width to left logo to maintain perfect visual center */}
-          <div className="hidden min-[1200px]:block w-[120px]" onMouseEnter={() => { if (activeDropdown) setActiveDropdown(null); }}></div>
+          <div className="hidden min-[960px]:block w-[120px]" onMouseEnter={() => { if (activeDropdown) setActiveDropdown(null); }}></div>
         </nav>
       </header>
 

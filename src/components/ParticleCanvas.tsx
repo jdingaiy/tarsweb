@@ -47,6 +47,8 @@ interface ParticleCanvasProps {
   particleDensity?: number;    // Customizable setting
   dispersionStrength?: number; // Customizable setting
   restingSpread?: number;      // Customizable setting
+  logoScale: number;
+  interactionMode: 'hover' | 'touch';
 }
 
 export default function ParticleCanvas({
@@ -57,6 +59,8 @@ export default function ParticleCanvas({
   particleDensity = 1.2,
   dispersionStrength = 1.1,
   restingSpread = 10.0,
+  logoScale,
+  interactionMode,
 }: ParticleCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const offscreenOutlineCanvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -154,8 +158,8 @@ export default function ParticleCanvas({
     const oData = outlineImgData.data;
 
     // Scan outline data every step size based on density (increased step on mobile to 2x for massive performance speedup)
-    const isMobileDevice = typeof window !== 'undefined' && window.innerWidth < 1200;
-    const step = isMobileDevice ? 2 : 1;
+    const isTouchDevice = interactionMode === 'touch';
+    const step = isTouchDevice ? 2 : 1;
 
     for (let y = 0; y < logoHeight; y += step) {
       for (let x = 0; x < logoWidth; x += step) {
@@ -182,7 +186,7 @@ export default function ParticleCanvas({
               fy = randPoint.y;
             }
 
-            const numOutlineParticles = isMobileDevice ? 2 : 4; // Reduced to 2 on mobile for performance
+            const numOutlineParticles = isTouchDevice ? 2 : 4; // Reduced to 2 on mobile/tablet for performance
             for (let i = 0; i < numOutlineParticles; i++) {
               // Stratified spread spectrum: many particles are tightly anchored to the outline,
               // while some fly out super-far to form a beautiful dramatic halo/aura of cosmic stardust
@@ -274,7 +278,7 @@ export default function ParticleCanvas({
       
       // Control sparse density of background fill-points using particleDensity
       // We will randomly sample coordinates from the pool database to completely avoid regular lines or checkerboard grids
-      const fillRatio = 0.45 * particleDensity * (isMobileDevice ? 0.20 : 1.0); // 80% fewer fill particles on mobile
+      const fillRatio = 0.45 * particleDensity * (isTouchDevice ? 0.20 : 1.0); // 80% fewer fill particles on mobile/tablet
       const targetCount = Math.floor(pool.length * fillRatio);
       
       for (let k = 0; k < targetCount; k++) {
@@ -350,13 +354,8 @@ export default function ParticleCanvas({
 
   // Sync scaled positions dynamically
   useEffect(() => {
-    // Elegant responsive scale perfectly matched with the App page's grid cell layout to never overlap cards
-    const isLargeDesktop = typeof window !== 'undefined' && window.innerWidth >= 1440;
-    const baseScale = isLargeDesktop ? 0.88 : 0.68;
-    const scaleFactor = dimensions.width < 1120 ? Math.max(0.5, dimensions.width / 1120) : 1.0;
-    const s = baseScale * scaleFactor; // Scale down above 1440px to give content breathing room
-    scaleRef.current = s;
-  }, [dimensions]);
+    scaleRef.current = logoScale;
+  }, [logoScale]);
 
   // Main Render Animation & Multi-hover Mapping Loop
   useEffect(() => {
@@ -377,10 +376,9 @@ export default function ParticleCanvas({
       const logoScreenX = (dimensions.width / 2) - (logoWidth / 2) * scale;
       const logoScreenY = (dimensions.height / 2) - (logoHeight / 2) * scale - 10;
 
-      // Detect hovered sector based on mouse position relative to path geometries (disabled on mobile)
+      // Detect hovered sector based on mouse position relative to path geometries (disabled in touch mode)
       let hoveredSector: SectorId | null = null;
-      const isMobile = typeof window !== 'undefined' && window.innerWidth < 1200;
-      if (!isMobile && mouseRef.current.x >= -500 && mouseRef.current.y >= -500) {
+      if (interactionMode === 'hover' && mouseRef.current.x >= -500 && mouseRef.current.y >= -500) {
         const localX = (mouseRef.current.x - logoScreenX) / scale;
         const localY = (mouseRef.current.y - logoScreenY) / scale;
 
@@ -398,7 +396,9 @@ export default function ParticleCanvas({
 
       if (hoveredSector !== lastHoveredSectorRef.current) {
         lastHoveredSectorRef.current = hoveredSector;
-        onSectorHover(hoveredSector);
+        if (interactionMode === 'hover') {
+          onSectorHover(hoveredSector);
+        }
       }
 
       if (canvas) {
@@ -838,22 +838,10 @@ export default function ParticleCanvas({
       ctx.restore();
     }
 
-    const isMobile = typeof window !== 'undefined' && window.innerWidth < 1200;
-    if (isMobile) {
-      if (clickedSector) {
-        onSectorClick(clickedSector, true);
-      } else {
-        // Clicking outside the logo shapes has no interaction in resting state, and only deactivates active states
-        if (activeSector !== null || activeVideo !== null) {
-          onSectorClick(null, false);
-        }
-      }
+    if (clickedSector) {
+      onSectorClick(clickedSector, true);
     } else {
-      if (clickedSector) {
-        onSectorClick(clickedSector, true);
-      } else {
-        onSectorClick(null, false);
-      }
+      onSectorClick(null, false);
     }
   };
 

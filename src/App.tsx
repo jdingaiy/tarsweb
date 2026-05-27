@@ -55,9 +55,9 @@ export default function App() {
     const handleOutsideClick = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
       
-      // Mobile: click outside canvas deactivates active state
-      const isMobile = window.innerWidth < 1200;
-      if (isMobile) {
+      // Mobile/Tablet: click outside canvas deactivates active state
+      const isTouch = window.innerWidth < 960;
+      if (isTouch) {
         if (target.closest('canvas')) return;
         if (activeSector !== null) {
           setActiveSector(null);
@@ -213,14 +213,71 @@ export default function App() {
     };
   }, [activeSector]);
 
+  // 5 Responsive Breakpoints Sizing & Interaction Configuration
+  const getLogoScaleAndConfig = (width: number, height: number) => {
+    let baseScale = 1.0;
+    let mode: 'hover' | 'touch' = 'hover';
+    let device: 'PC' | 'laptop' | 'S-laptop' | 'tablet' | 'mobile' = 'PC';
+    let paddingVal = 48;
+
+    if (width >= 1440) {
+      device = 'PC';
+      mode = 'hover';
+      baseScale = 0.88;
+      paddingVal = 240;
+    } else if (width >= 1200) {
+      device = 'laptop';
+      mode = 'hover';
+      baseScale = 0.65;
+      paddingVal = 48;
+    } else if (width >= 960) {
+      device = 'S-laptop';
+      mode = 'hover';
+      baseScale = 0.48;
+      paddingVal = 32;
+    } else if (width >= 768) {
+      device = 'tablet';
+      mode = 'touch';
+      baseScale = 0.60;
+      paddingVal = 32;
+    } else {
+      device = 'mobile';
+      mode = 'touch';
+      baseScale = Math.min(0.36, (0.6 * width) / 670);
+      paddingVal = 16;
+    }
+
+    // Apply absolute 60% safety clamps
+    const maxWidthScale = (0.6 * width) / 670;
+    const maxHeightScale = (0.6 * height) / 580;
+    const maxAllowedScale = Math.min(maxWidthScale, maxHeightScale);
+    const finalScale = Math.min(baseScale, maxAllowedScale);
+
+    return { scale: finalScale, mode, device, boundaryPadding: paddingVal };
+  };
+
+  const { scale: currentLogoScale, mode: interactionMode, device: currentDevice, boundaryPadding } = getLogoScaleAndConfig(dimensions.width, dimensions.height);
+  const scaleFactor = currentLogoScale / 0.88;
+
+  // Safe padding and width calculations for desktop subtitles/guiding lines
+  const getSubTitleLayout = (offset: number) => {
+    const textPadding = Math.min(boundaryPadding, dimensions.width / 2 - offset * currentLogoScale - 200);
+    const safeTextPadding = Math.max(16, textPadding);
+    const containerWidth = dimensions.width / 2 - safeTextPadding - offset * currentLogoScale;
+    return { safeTextPadding, containerWidth };
+  };
+
+  const algLayout = getSubTitleLayout(283);
+  const ontLayout = getSubTitleLayout(368);
+  const appLayout = getSubTitleLayout(187);
+
   const getColStyle = (id: 'algorithm' | 'ontology' | 'application') => {
     const isActive = activeSector === id;
     const isAnyActive = activeSector !== null;
-
-    const isMobile = dimensions.width < 1200;
+    const isTouch = interactionMode === 'touch';
 
     const zIndex = isActive ? 5 : 1;
-    const opacity = isMobile ? (isActive ? 1.0 : 0.0) : (isActive ? 1.0 : (isAnyActive ? 0.0 : 1.0));
+    const opacity = isTouch ? (isActive ? 1.0 : 0.0) : (isActive ? 1.0 : (isAnyActive ? 0.0 : 1.0));
 
     const maskImage = isActive 
       ? 'none' 
@@ -267,18 +324,6 @@ export default function App() {
       transition: 'filter 0.7s ease, object-position 0.7s cubic-bezier(0.16, 1, 0.3, 1)',
     };
   };
-
-
-
-  // Symmetrical full-screen grid math to align precisely with center-anchored design
-  const scaleFactor = dimensions.width < 1120 ? Math.max(0.5, dimensions.width / 1120) : 1.0;
-  const boundaryPadding = dimensions.width >= 1440 ? 240 : 48;
-  const logoBaseScale = dimensions.width >= 1440 ? 0.88 : 0.68;
-  const currentLogoScale = logoBaseScale * scaleFactor;
-  const cellSize = 80 * scaleFactor;
-  const cardSize = 160 * scaleFactor;
-  const cX = dimensions.width / 2;
-  const cY = dimensions.height / 2;
 
   return (
     <div className="relative min-h-screen w-full bg-[#030303] text-gray-100 flex flex-col overflow-hidden">
@@ -586,7 +631,7 @@ export default function App() {
               background: 'rgba(3, 3, 3, 0.9)',
               pointerEvents: 'none',
               zIndex: 9,
-              opacity: (dimensions.width < 1200) ? 0 : (activeSector ? 0 : 1),
+              opacity: (interactionMode === 'touch') ? 0 : (activeSector ? 0 : 1),
               transition: 'opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1)',
               maskImage: 'radial-gradient(circle 220px at -1000px -1000px, transparent 0%, black 100%)',
               WebkitMaskImage: 'radial-gradient(circle 220px at -1000px -1000px, transparent 0%, black 100%)',
@@ -625,13 +670,12 @@ export default function App() {
             <ParticleCanvas 
               activeSector={activeSector}
               onSectorHover={(sector) => {
-                if (typeof window === 'undefined' || window.innerWidth >= 1200) {
+                if (interactionMode === 'hover') {
                   setActiveSector(sector);
                 }
               }}
               onSectorClick={(sector, clickedOnShape) => {
-                const isMobile = typeof window !== 'undefined' && window.innerWidth < 1200;
-                if (isMobile) {
+                if (interactionMode === 'touch') {
                   if (clickedOnShape && sector !== null) {
                     setActiveSector(activeSector === sector ? null : sector);
                   } else {
@@ -646,21 +690,23 @@ export default function App() {
               particleDensity={particleDensity}
               dispersionStrength={dispersionStrength}
               restingSpread={restingSpread}
+              logoScale={currentLogoScale}
+              interactionMode={interactionMode}
             />
           </div>
 
           {/* 3. Unified Subtitles / Guiding Line layout */}
           {activeSector && (
             <>
-              {/* Desktop view (>= 1200px) */}
-              <div className="hidden min-[1200px]:block">
+              {/* Desktop/Laptop view (>= 960px) */}
+              <div className="hidden min-[960px]:block">
                 {activeSector === 'algorithm' && (
                   <div 
                     style={{
                       position: 'absolute',
-                      left: `${boundaryPadding}px`,
-                      top: `calc(50% - ${(82 * logoBaseScale + 10) * scaleFactor}px)`,
-                      width: `calc(50vw - ${boundaryPadding}px - ${283 * currentLogoScale}px)`,
+                      left: `${algLayout.safeTextPadding}px`,
+                      top: `calc(50% - ${82 * currentLogoScale + 10 * scaleFactor}px)`,
+                      width: `${algLayout.containerWidth}px`,
                       transform: 'translateY(-50%)',
                     }}
                     className="z-30 transition-all duration-300 select-none pointer-events-none"
@@ -681,9 +727,9 @@ export default function App() {
                   <div 
                     style={{
                       position: 'absolute',
-                      right: `${boundaryPadding}px`,
-                      top: `calc(50% - ${(230 * logoBaseScale + 10) * scaleFactor}px)`,
-                      width: `calc(50vw - ${boundaryPadding}px - ${368 * currentLogoScale}px)`,
+                      right: `${ontLayout.safeTextPadding}px`,
+                      top: `calc(50% - ${230 * currentLogoScale + 10 * scaleFactor}px)`,
+                      width: `${ontLayout.containerWidth}px`,
                       transform: 'translateY(-50%)',
                     }}
                     className="z-30 transition-all duration-300 select-none pointer-events-none"
@@ -704,9 +750,9 @@ export default function App() {
                   <div 
                     style={{
                       position: 'absolute',
-                      right: `${boundaryPadding}px`,
-                      top: `calc(50% + ${(83.5 * logoBaseScale - 10) * scaleFactor}px)`,
-                      width: `calc(50vw - ${boundaryPadding}px - ${187 * currentLogoScale}px)`,
+                      right: `${appLayout.safeTextPadding}px`,
+                      top: `calc(50% + ${83.5 * currentLogoScale - 10 * scaleFactor}px)`,
+                      width: `${appLayout.containerWidth}px`,
                       transform: 'translateY(-50%)',
                     }}
                     className="z-30 transition-all duration-300 select-none pointer-events-none"
@@ -724,8 +770,8 @@ export default function App() {
                 )}
               </div>
 
-              {/* Mobile view (< 1200px) */}
-              <div className="block min-[1200px]:hidden absolute bottom-16 left-0 right-0 z-30 pointer-events-none select-none px-6">
+              {/* Mobile/Tablet view (< 960px) */}
+              <div className="block min-[960px]:hidden absolute bottom-16 left-0 right-0 z-30 pointer-events-none select-none px-6">
                 <div className="text-center">
                   <h1 
                     style={{ fontWeight: 305 }}

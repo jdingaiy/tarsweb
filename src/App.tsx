@@ -256,12 +256,12 @@ export default function App() {
       device = 'laptop';
       mode = 'hover';
       baseScale = 0.65;
-      paddingVal = 48;
+      paddingVal = 120;
     } else if (width >= 960) {
       device = 'S-laptop';
       mode = 'hover';
       baseScale = 0.48;
-      paddingVal = 32;
+      paddingVal = 60;
     } else if (width >= 768) {
       device = 'tablet';
       mode = 'touch';
@@ -296,8 +296,7 @@ export default function App() {
 
   // Safe padding and width calculations for desktop subtitles/guiding lines
   const getSubTitleLayout = (offset: number) => {
-    const textPadding = Math.min(boundaryPadding, dimensions.width / 2 - offset * currentLogoScale - 200);
-    const safeTextPadding = Math.max(16, textPadding);
+    const safeTextPadding = boundaryPadding;
     const containerWidth = dimensions.width / 2 - safeTextPadding - offset * currentLogoScale;
     return { safeTextPadding, containerWidth };
   };

@@ -95,30 +95,57 @@ export default function App() {
   const flashlightOverlayRef = React.useRef<HTMLDivElement | null>(null);
 
   React.useEffect(() => {
-    const handleGlobalMouseMove = (e: MouseEvent) => {
+    const updateSpotlight = (clientX: number, clientY: number) => {
       if (!flashlightOverlayRef.current) return;
       const rect = flashlightOverlayRef.current.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
+      const x = clientX - rect.left;
+      const y = clientY - rect.top;
       
-      const maskStr = `radial-gradient(circle 220px at ${x}px ${y}px, transparent 0%, black 100%)`;
+      const radius = window.innerWidth < 960 ? 180 : 220;
+      const maskStr = `radial-gradient(circle ${radius}px at ${x}px ${y}px, transparent 0%, black 100%)`;
       flashlightOverlayRef.current.style.maskImage = maskStr;
       flashlightOverlayRef.current.style.webkitMaskImage = maskStr;
     };
 
-    const handleGlobalMouseLeave = () => {
+    const clearSpotlight = () => {
       if (!flashlightOverlayRef.current) return;
       const maskStr = `radial-gradient(circle 220px at -1000px -1000px, transparent 0%, black 100%)`;
       flashlightOverlayRef.current.style.maskImage = maskStr;
       flashlightOverlayRef.current.style.webkitMaskImage = maskStr;
     };
 
+    const handleGlobalMouseMove = (e: MouseEvent) => {
+      updateSpotlight(e.clientX, e.clientY);
+    };
+
+    const handleGlobalTouchMove = (e: TouchEvent) => {
+      if (e.touches.length > 0) {
+        const touch = e.touches[0];
+        updateSpotlight(touch.clientX, touch.clientY);
+      }
+    };
+
+    const handleGlobalTouchStart = (e: TouchEvent) => {
+      if (e.touches.length > 0) {
+        const touch = e.touches[0];
+        updateSpotlight(touch.clientX, touch.clientY);
+      }
+    };
+
     window.addEventListener('mousemove', handleGlobalMouseMove, { passive: true });
-    document.addEventListener('mouseleave', handleGlobalMouseLeave);
+    document.addEventListener('mouseleave', clearSpotlight);
+    window.addEventListener('touchmove', handleGlobalTouchMove, { passive: true });
+    window.addEventListener('touchstart', handleGlobalTouchStart, { passive: true });
+    window.addEventListener('touchend', clearSpotlight, { passive: true });
+    window.addEventListener('touchcancel', clearSpotlight, { passive: true });
 
     return () => {
       window.removeEventListener('mousemove', handleGlobalMouseMove);
-      document.removeEventListener('mouseleave', handleGlobalMouseLeave);
+      document.removeEventListener('mouseleave', clearSpotlight);
+      window.removeEventListener('touchmove', handleGlobalTouchMove);
+      window.removeEventListener('touchstart', handleGlobalTouchStart);
+      window.removeEventListener('touchend', clearSpotlight);
+      window.removeEventListener('touchcancel', clearSpotlight);
     };
   }, []);
 
@@ -639,7 +666,7 @@ export default function App() {
               background: 'rgba(3, 3, 3, 0.9)',
               pointerEvents: 'none',
               zIndex: 9,
-              opacity: (interactionMode === 'touch') ? 0 : (activeSector ? 0 : 1),
+              opacity: activeSector ? 0 : 1,
               transition: 'opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1)',
               maskImage: 'radial-gradient(circle 220px at -1000px -1000px, transparent 0%, black 100%)',
               WebkitMaskImage: 'radial-gradient(circle 220px at -1000px -1000px, transparent 0%, black 100%)',

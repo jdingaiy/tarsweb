@@ -780,9 +780,9 @@ export default function ParticleCanvas({
     };
   }, [dimensions, activeSector, dispersionStrength]);
 
-  // Track cursor globally across the entire viewport for unlimited searchlight range
+  // Track cursor and touch globally across the entire viewport for unlimited searchlight range
   useEffect(() => {
-    const handleGlobalMouseMove = (e: MouseEvent) => {
+    const updateCoordinates = (clientX: number, clientY: number) => {
       const canvas = canvasRef.current;
       if (!canvas) return;
 
@@ -790,8 +790,8 @@ export default function ParticleCanvas({
       if (rect.width === 0 || rect.height === 0) return;
 
       // Compensate for CSS transform scale factor to map coordinates to internal resolution
-      const x = ((e.clientX - rect.left) / rect.width) * dimensions.width;
-      const y = ((e.clientY - rect.top) / rect.height) * dimensions.height;
+      const x = ((clientX - rect.left) / rect.width) * dimensions.width;
+      const y = ((clientY - rect.top) / rect.height) * dimensions.height;
 
       mouseRef.current.px = mouseRef.current.x;
       mouseRef.current.py = mouseRef.current.y;
@@ -799,20 +799,50 @@ export default function ParticleCanvas({
       mouseRef.current.y = y;
     };
 
+    const clearCoordinates = () => {
+      mouseRef.current.x = -1000;
+      mouseRef.current.y = -1000;
+    };
+
+    const handleGlobalMouseMove = (e: MouseEvent) => {
+      updateCoordinates(e.clientX, e.clientY);
+    };
+
     const handleGlobalMouseLeave = (e: MouseEvent) => {
       // Clear flashlight coordinates if mouse goes completely out of the webpage body
       if (!e.relatedTarget || e.relatedTarget === document.documentElement) {
-        mouseRef.current.x = -1000;
-        mouseRef.current.y = -1000;
+        clearCoordinates();
+      }
+    };
+
+    const handleGlobalTouchMove = (e: TouchEvent) => {
+      if (e.touches.length > 0) {
+        const touch = e.touches[0];
+        updateCoordinates(touch.clientX, touch.clientY);
+      }
+    };
+
+    const handleGlobalTouchStart = (e: TouchEvent) => {
+      if (e.touches.length > 0) {
+        const touch = e.touches[0];
+        updateCoordinates(touch.clientX, touch.clientY);
       }
     };
 
     window.addEventListener('mousemove', handleGlobalMouseMove, { passive: true });
     document.addEventListener('mouseleave', handleGlobalMouseLeave);
+    window.addEventListener('touchmove', handleGlobalTouchMove, { passive: true });
+    window.addEventListener('touchstart', handleGlobalTouchStart, { passive: true });
+    window.addEventListener('touchend', clearCoordinates, { passive: true });
+    window.addEventListener('touchcancel', clearCoordinates, { passive: true });
 
     return () => {
       window.removeEventListener('mousemove', handleGlobalMouseMove);
       document.removeEventListener('mouseleave', handleGlobalMouseLeave);
+      window.removeEventListener('touchmove', handleGlobalTouchMove);
+      window.removeEventListener('touchstart', handleGlobalTouchStart);
+      window.removeEventListener('touchend', clearCoordinates);
+      window.removeEventListener('touchcancel', clearCoordinates);
     };
   }, [dimensions]);
 

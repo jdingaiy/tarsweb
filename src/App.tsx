@@ -257,7 +257,16 @@ export default function App() {
   };
 
   const { scale: currentLogoScale, mode: interactionMode, device: currentDevice, boundaryPadding } = getLogoScaleAndConfig(dimensions.width, dimensions.height);
+  console.log('App render debug:', { width: dimensions.width, height: dimensions.height, currentLogoScale, interactionMode, currentDevice, boundaryPadding });
   const scaleFactor = currentLogoScale / 0.88;
+
+  // Dynamic active title font size gradient for web endpoints
+  const activeFontSize = (() => {
+    if (currentDevice === 'PC') return '40px';
+    if (currentDevice === 'laptop') return '32px';
+    if (currentDevice === 'S-laptop') return '26px';
+    return '24px';
+  })();
 
   // Safe padding and width calculations for desktop subtitles/guiding lines
   const getSubTitleLayout = (offset: number) => {
@@ -713,7 +722,7 @@ export default function App() {
                   >
                     <div className="text-left">
                       <h1 
-                        style={{ fontSize: '40px', fontWeight: 305 }} 
+                        style={{ fontSize: activeFontSize, fontWeight: 305 }} 
                         className="text-white tracking-wide mb-2"
                       >
                         超级算法
@@ -736,7 +745,7 @@ export default function App() {
                   >
                     <div className="text-right flex flex-col items-end">
                       <h1 
-                        style={{ fontSize: '40px', fontWeight: 305 }} 
+                        style={{ fontSize: activeFontSize, fontWeight: 305 }} 
                         className="text-white tracking-wide mb-2"
                       >
                         超级本体
@@ -759,7 +768,7 @@ export default function App() {
                   >
                     <div className="text-right flex flex-col items-end">
                       <h1 
-                        style={{ fontSize: '40px', fontWeight: 305 }} 
+                        style={{ fontSize: activeFontSize, fontWeight: 305 }} 
                         className="text-white tracking-wide mb-2"
                       >
                         超级应用

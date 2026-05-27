@@ -176,6 +176,11 @@ export default function ParticleCanvas({
           else if (b > r && b > g) group = 'application';
 
           if (group) {
+            // Downsample the Algorithm outline by 50% in a checkerboard pattern to balance total particle count
+            if (group === 'algorithm' && (x + y) % 2 === 0) {
+              continue;
+            }
+
             // Assign a corresponding random target shape interior coordinate
             const pool = matchFillPoints[group];
             let fx = x;
@@ -278,7 +283,10 @@ export default function ParticleCanvas({
       
       // Control sparse density of background fill-points using particleDensity
       // We will randomly sample coordinates from the pool database to completely avoid regular lines or checkerboard grids
-      const fillRatio = 0.45 * particleDensity * (isTouchDevice ? 0.20 : 1.0); // 80% fewer fill particles on mobile/tablet
+      let fillRatio = 0.45 * particleDensity * (isTouchDevice ? 0.20 : 1.0); // 80% fewer fill particles on mobile/tablet
+      if (group === 'algorithm') {
+        fillRatio *= 0.50; // 50% fewer fill particles for algorithm to balance density
+      }
       const targetCount = Math.floor(pool.length * fillRatio);
       
       for (let k = 0; k < targetCount; k++) {
@@ -602,8 +610,8 @@ export default function ParticleCanvas({
           }
 
           if (finalDrawAlpha > 0.005) {
-            // Draw soft glow/bloom halo (slightly wider and brighter) - skipped on mobile for performance
-            if (!isTouch) {
+            // Draw soft glow/bloom halo (slightly wider and brighter) - only for sparkle stars to optimize performance
+            if (!isTouch && isSparkle) {
               ctx.fillStyle = `rgba(${colorStr}, ${finalDrawAlpha * 0.28})`;
               ctx.beginPath();
               ctx.arc(p.x, p.y, finalDrawSize * 2.2, 0, Math.PI * 2);
@@ -732,8 +740,8 @@ export default function ParticleCanvas({
           }
 
           if (finalDrawAlpha > 0.005) {
-            // Draw soft glow/bloom halo (subtle and tight) - skipped on mobile for performance
-            if (!isTouch) {
+            // Draw soft glow/bloom halo (subtle and tight) - only for sparkle stars to optimize performance
+            if (!isTouch && isSparkle) {
               ctx.fillStyle = `rgba(${colorStr}, ${finalDrawAlpha * 0.12})`;
               ctx.beginPath();
               ctx.arc(drawX, drawY, finalDrawSize * 1.8, 0, Math.PI * 2);

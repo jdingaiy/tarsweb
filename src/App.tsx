@@ -609,7 +609,7 @@ export default function App() {
             <div style={getColStyle('algorithm')}>
               <video
                 ref={videoRefs.algorithm}
-                src="/asset/超级算法2.mp4"
+                src="/asset/超级算法.mp4"
                 muted
                 loop
                 playsInline
